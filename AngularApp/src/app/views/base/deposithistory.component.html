@@ -1,0 +1,36 @@
+<div class="animated fadeIn">
+  <div class="card" > 
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i> Deposit History
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Customer Email</th>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+            <th>Processor Name</th>
+            <th>Transaction Date</th>
+            <th>Transaction Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let Deposit of DepositeData">
+            <td>{{Deposit.Id}}</td>
+            <td>{{Deposit.CustomerEmail}}</td>
+            <td>{{Deposit.TranscationTypeString}}</td>
+            <td>{{Deposit.FinalAmountRaw}}</td>
+            <td>{{Deposit.TranscationTypeString}}</td>
+            <td>{{Deposit.TransactionDateString}}</td>
+            <td>
+              <span *ngIf="Deposit.StatusId == 1" class="badge badge-danger">Pending</span>
+              <span *ngIf="Deposit.StatusId == 2" class="badge badge-success">Complete</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

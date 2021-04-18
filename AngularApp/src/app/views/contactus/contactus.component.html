@@ -1,0 +1,63 @@
+<section class="page-wrapper">
+  <header-home></header-home>
+
+
+    <!-- Hero Area Begin -->
+    <div class="hero-area set-bg" [ngStyle]="{background: 'url(assets/img/elements-bg.jpg)'}">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="hero-text">
+                      <h2>Contact Us</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+    <!----- content area start -->
+    <section class="contentarea ">
+      <div class="container contactus pad60">
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <h3>Business Solution Team</h3>
+            <p class="addressbox" style="color: white;">4213 - B Tingkat 1,<br />
+              Jalan Kebun Sultan, 15350 Kota Bharu, Kelantan Malaysia</p>
+            <!-- <p class="telebox" style="color: white;">Tel : (770) 270-5597</p>
+            <p class="faxbox" style="color: white;">Fax : (770) 414-5351</p> -->
+            <div class="googlemap">
+              <iframe
+                src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=4213%20-%20B%20Tingkat%201,Jalan%20Kebun%20Sultan,%2015350%20Kota%20Bharu,%20Kelantan%20Malaysia+(Business%20Solution%20Team)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12">
+            <h3 class="ipadmt25">Feedback Form</h3>
+            <form [formGroup]="contactUs" (ngSubmit)="onSubmit()">
+            <div class="contactform">
+              <ul>
+                <li>
+                  <div class="form-group">
+                  <input type="text" formControlName="Fname" placeholder="First Name" class="form-control" />
+                </div>
+                </li>
+                <li>
+                  <div class="form-group"><input type="text" formControlName="Lname" placeholder="Last Name" class="form-control" /></div></li>
+                <li><div class="form-group"><input type="text" formControlName="Email" placeholder="Email Address" class="form-control" /></div></li>
+                <li><div class="form-group"><input type="text" formControlName="Subject" placeholder="Subject" class="form-control" /></div></li>
+                <li class="wdth100"><div class="form-group"><textarea placeholder="Message" formControlName="Enquiry" class="form-control"></textarea></div></li>
+                <li class="wdth100"><input type="submit" class="btn btn-primary" value="Submit" /></li>
+              </ul>
+            </div>
+</form>
+          </div>
+        </div>
+
+
+      </div>
+
+      <footer-home></footer-home>
+    </section>
+    <!-- content area end -->
+
+  </section>
