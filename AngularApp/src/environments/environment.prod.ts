@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
-  siteUrl : "http://magicbooster.net/",
-  baseApiUrl: 'http://api.magicbooster.net/api/v1/',
-  coinPaymentMerAcc : '7abf1e36724948f8dfb5686a3395cbb0',
+  siteUrl : "https://profxsignals.net",
+  baseApiUrl: 'http://localhost:82/api/v1/',
+  coinPaymentMerAcc : 'd99bdec002012a7c6b4cd01c75a27bc9',
   withdrawalFees:0.5,
   AllowFund:true,
   AllowPurchase:true,

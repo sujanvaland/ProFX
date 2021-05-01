@@ -165,8 +165,8 @@ namespace SmartStore.WebApi.Controllers.Api
 						transaction = new Transaction();
 						transaction.CustomerId = levelcustomer.Id;
 						transaction.RefId = customer.Id;
-						transaction.Amount = plan.PayEveryXDays;
-						transaction.FinalAmount = plan.PayEveryXDays;
+						transaction.Amount = 1;
+						transaction.FinalAmount = 1;
 						transaction.TransactionDate = DateTime.Now;
 						transaction.StatusId = (int)Status.Completed;
 						transaction.TranscationTypeId = (int)TransactionType.DirectBonus;
@@ -191,8 +191,8 @@ namespace SmartStore.WebApi.Controllers.Api
 						{
 							transaction = new Transaction();
 							transaction.CustomerId = levelcustomer.Id;
-							transaction.Amount = (float)planCommission.CommissionPercentage * plan.MinimumInvestment;
-							transaction.FinalAmount = (float)planCommission.CommissionPercentage * plan.MinimumInvestment;
+							transaction.Amount = Convert.ToInt64(0.1);
+							transaction.FinalAmount = Convert.ToInt64(0.1);
 							transaction.TransactionDate = DateTime.Now;
 							transaction.StatusId = (int)Status.Completed;
 							transaction.RefId = customer.Id;
@@ -249,7 +249,7 @@ namespace SmartStore.WebApi.Controllers.Api
 						TransactionModel transactionModel = new TransactionModel();
 						transactionModel.Amount = amountreq * customerPlanModel.NoOfPosition;
 						transactionModel.CustomerId = Customer.Id;
-						transactionModel.FinalAmount = plan.ROIPercentage * customerPlanModel.NoOfPosition;
+						transactionModel.FinalAmount = amountreq * customerPlanModel.NoOfPosition;
 						transactionModel.NoOfPosition = customerPlanModel.NoOfPosition;
 						transactionModel.TransactionDate = DateTime.Now;
 						transactionModel.RefId = plan.Id;
@@ -270,9 +270,9 @@ namespace SmartStore.WebApi.Controllers.Api
 							customerplan.CreatedOnUtc = DateTime.Now;
 							customerplan.UpdatedOnUtc = DateTime.Now;
 							customerplan.PlanId = plan.Id;
-							customerplan.AmountInvested = plan.ROIPercentage;
-							customerplan.ROIToPay = 0;
-							customerplan.NoOfPayout = 0;
+							customerplan.AmountInvested = plan.MaximumInvestment;
+							customerplan.ROIToPay = (plan.MaximumInvestment * plan.ROIPercentage/100) * plan.NoOfPayouts;
+							customerplan.NoOfPayout = plan.NoOfPayouts;
 							customerplan.ExpiredDate = DateTime.Today;
 							customerplan.IsActive = true;
 							if (plan.StartROIAfterHours > 0)
@@ -281,12 +281,12 @@ namespace SmartStore.WebApi.Controllers.Api
 								customerplan.LastPaidDate = DateTime.Today;
 							_customerPlanService.InsertCustomerPlan(customerplan);
 
-							//_customerService.SpPayNetworkIncome(customerplan.CustomerId, customerplan.PlanId);
+							_customerService.SpPayNetworkIncome(customerplan.CustomerId, customerplan.PlanId);
 						}
 
 
 						message = "Your purchase was successfull";
-						ReleaseLevelCommission(plan.Id, Customer, transactionModel.Amount);
+						//ReleaseLevelCommission(plan.Id, Customer, transactionModel.Amount);
 						return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success" });
 					}
 					else
@@ -501,6 +501,14 @@ namespace SmartStore.WebApi.Controllers.Api
 				message = T("Invesment.Deposit.FundingError").Text;
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = message });
+		}
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.ActionName("GetPlan")]
+		public HttpResponseMessage GetPlan()
+		{
+			var plans = _planService.GetAllPlans().OrderBy(x => x.Name);
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = plans });
 		}
 
 		public void PrepareCustomerPlanModel(CustomerPlanModel model)

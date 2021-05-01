@@ -224,7 +224,7 @@ namespace SmartStore.WebApi.Controllers.Api
 			model.AdvanceCashAcc = customer.GetAttribute<string>(SystemCustomerAttributeNames.AdvanceCashAcc);
 			model.Enable2FA = customer.GetAttribute<bool>(SystemCustomerAttributeNames.Enable2FA);
 			model.AvailableBalance = (float)Math.Round(_customerService.GetAvailableBalance(customer.Id), 2);
-			model.NetworkIncome = _customerService.GetNetworkIncome(customer.Id);
+			//model.NetworkIncome = _customerService.GetNetworkIncome(customer.Id);
 			model.TradeIncome = _customerService.GetTradeIncome(customer.Id);
 			model.PendingWithdrawal = _customerService.GetCustomerPendingWithdrawal(customer.Id);
 			model.CompletedWithdrawal = _customerService.GetCustomerCompletedWithdrawal(customer.Id);
@@ -237,6 +237,7 @@ namespace SmartStore.WebApi.Controllers.Api
 			model.UnilevelEarning = _customerService.GetCustomerUnilevelBonus(id);
 			model.TotalReferral = _customerService.GetCustomerDirectReferral(id).Count();
 			model.AdCredit = _customerService.GetAvailableCredits(CustomerId).FirstOrDefault().AvailableClick;
+			model.TodaysPair = _customerService.GetCurrentActivePlan(customer.Id).ToString();
 			model.InvestorId = id.ToString();
 			model.Name = customer.GetFullName();
 			var ReferredBy = _customerService.GetCustomerById(customer.AffiliateId);

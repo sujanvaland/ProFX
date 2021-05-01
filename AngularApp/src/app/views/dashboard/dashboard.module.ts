@@ -6,7 +6,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { ModalModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { JwSocialButtonsModule } from 'jw-angular-social-buttons';
 
 @NgModule({

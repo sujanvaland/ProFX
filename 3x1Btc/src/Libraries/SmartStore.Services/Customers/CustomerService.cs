@@ -916,6 +916,14 @@ namespace SmartStore.Services.Customers
 
 			return Count;
 		}
+
+		public int GetCurrentActivePlan(int CustomerId)
+		{
+			var Count = _customerPlanRepository.Table.Where(e => e.CustomerId == CustomerId && e.IsActive == true)?.Count();
+			if (Count > 0)
+				return int.Parse(Count.ToString());
+			return 0;
+		}
 		public string GetCurrentPlanName(int CustomerId)
 		{
 			var customer = GetCustomerById(CustomerId);

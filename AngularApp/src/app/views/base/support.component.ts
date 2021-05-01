@@ -3,7 +3,7 @@ import { FormGroup,FormBuilder,Validators } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
 import { ToastrService } from 'ngx-toastr';
 import { tick } from '@angular/core/testing';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as $ from 'jquery';
 @Component({
   templateUrl: 'support.component.html'

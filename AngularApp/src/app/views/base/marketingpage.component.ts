@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AdvertismentService } from '../../services/advertisment.service';
 import { ToastrService } from 'ngx-toastr';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   templateUrl: 'marketingpage.component.html'

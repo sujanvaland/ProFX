@@ -14,6 +14,12 @@ export class RevShareService {
     return this.http.post<any>(url,CustomerPlanModel);
   }
 
+  GetPlan()
+  {
+    let url = environment.baseApiUrl + "RevShare/GetPlan";
+    return this.http.get<any>(url);
+  }
+
   BuyShareWithCoin(CustomerPlanModel)
   {
     let url = environment.baseApiUrl + "RevShare/BuyShareWithCoin";

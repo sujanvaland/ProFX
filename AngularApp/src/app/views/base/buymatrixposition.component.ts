@@ -66,6 +66,7 @@ export class BuyMatrixPositionComponent {
       }
 
       $('.loaderbo').show();
+      debugger
       this.matrixservice.BuyPosition(transactionModel).subscribe(
         res => {
           if(res.Message == "success"){

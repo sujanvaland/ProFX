@@ -1,6 +1,6 @@
 import { Component, ViewChild, Pipe, PipeTransform } from '@angular/core';
 import { CommonService } from '../../services/common.service';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { AdvertismentService } from '../../services/advertisment.service';
 import { DomSanitizer} from '@angular/platform-browser';
 import * as $ from 'jquery';

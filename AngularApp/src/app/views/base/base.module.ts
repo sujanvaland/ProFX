@@ -14,7 +14,7 @@ import { WithdrawalComponent } from './withdrawal.component';
 import { LoginAdComponent } from  './loginad.component';
 import { MarketingPageComponent} from './marketingpage.component';
 import { MySharesComponent} from './myshares.component';
-import { ModalModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
 // Tabs Component
 import { TabsModule } from 'ngx-bootstrap/tabs';
 

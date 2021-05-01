@@ -25,7 +25,8 @@ Name = "";
 UserList = [];
 AmountInvested = 0;
 Total:number=0;
-
+Plans = [] as any;
+plan = {} as any;
 constructor(
   private formBuilder: FormBuilder,
   private toastr:ToastrService,
@@ -36,32 +37,28 @@ constructor(
     ngOnInit (){
 
       this.stName = this.formBuilder.group({
-        NoOfPack: ['', Validators.required],
+        NoOfPack: [''],
       });
 
         if(!environment.AllowAdPack){
           this.toastr.info("Purchase is diabled till launch date");
         }
-    }
 
-    getTotal(){
-      this.Total = this.stName.value.NoOfPack * 10;
+        this.revshare.GetPlan().subscribe(res=>{
+          this.Plans = res?.data;
+          console.log(this.Plans);
+        })
     }
-
-    get f() { return this.stName.controls; }
 
     onSubmit() {
-      if (this.stName.invalid) {
-          return;
-      }
-      if(this.stName.value.NoOfPack > 0){
+      if(this.plan.Id > 0){
         if(confirm("Are you sure you want to make this purchase")) {          
           let CustomerPlanModel = {
             CustomerId : this.CustomerId,
-            PlanId : this.PlanId,
-            NoOfPosition:this.stName.value.NoOfPack
+            PlanId : this.plan.Id,
+            NoOfPosition:1
           }
-          $('.loaderbo').show();               
+          $('.loaderbo').show();       
           this.revshare.BuyShare(CustomerPlanModel).subscribe(res =>{                
             if(res.Message == "success"){
               this.toastr.success("Your purchase was successful");
@@ -84,7 +81,7 @@ constructor(
           })
         }
       }else{
-        this.toastr.error("Number of Trade Lot is required","Error")
+        this.toastr.error("Please select package","Error")
       }
         
       $('.loaderbo').hide();

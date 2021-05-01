@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ReportService } from '../../services/report.service';
 import { CommonService } from '../../services/common.service';
-import { ModalDirective } from 'ngx-bootstrap';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   templateUrl: 'news.component.html'

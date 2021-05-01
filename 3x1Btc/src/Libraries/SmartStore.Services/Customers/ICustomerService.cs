@@ -333,5 +333,6 @@ namespace SmartStore.Services.Customers
 		string GetTotalPair(int CustomerId);
 		float GetNetworkIncome(int CustomerId);
 		float GetTradeIncome(int CustomerId);
+		int GetCurrentActivePlan(int CustomerId);
 	}
 }
