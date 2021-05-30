@@ -82,7 +82,7 @@ namespace SmartStore.Core.Domain.Hyip
 		public string TranscationNote { get; set; }
 
 		[DataMember]
-		public int NoOfPosition { get; set; }
+		public decimal NoOfPosition { get; set; }
 		/// <summary>
 		/// Gets or sets the date and time of instance creation
 		/// </summary>

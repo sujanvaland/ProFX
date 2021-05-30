@@ -1,31 +1,23 @@
 <div class="animated fadeIn">
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-12">
       <div class="card">
         <div class="card-header">
           <strong>Buy Trade Lots</strong>          
         </div>
         <div class="card-body">
-            <div class="container loginarea" > <!-- *ngIf="confirm" -->
-                <!-- <div class="form-group">
-                  <h3 style="color: black;">Lot Price : $ 10</h3>
-                  <label for="name">Number of Trading Lots to Purchase:</label>
-                  <input type="number" formControlName="NoOfPack" class="form-control" (change)="getTotal()" placeholder="Enter Number of Lot"
-                    [ngClass]="{ 'is-invalid': submitted && f.NoOfPack.errors }" />
-                    <div *ngIf="submitted && f.NoOfPack.errors" class="invalid-feedback">
-                      <div *ngIf="f.NoOfPack.errors.required">Number of Lot is required</div>
-                    </div>
-                    <h5 style="color: black;margin-top: 10px;">Total : {{Total}} $</h5>
-                </div> -->
-                <div class="row">
-                  <div class="form-group col-sm-8">
-                    <label for="ccmonth">Select Package</label>
-                    <select class="form-control" [(ngModel)]="plan">
-                      <option *ngFor="let plan of Plans" [ngValue]="plan">{{plan.Name}} ({{plan.MinimumInvestment}}$)</option>
-                    </select>
-                  </div>
+            <div class="packagelist" > <!-- *ngIf="confirm" -->
+              <div class="row" *ngFor="let plan of Plans">
+                <div class="col-md-2">
+                  <span class="packagebtn">{{plan.Name}}</span>
                 </div>
-              <button type="button" (click)="onSubmit()" class="btn btn-block btn-success">Buy Package</button>
+                <div class="col-md-8">
+                  <h4>{{plan.Name}} ({{plan.MinimumInvestment}}$) , Daily Binary Cap : {{plan.MinimumInvestment}}$ , Gains : 300%</h4>
+                </div>
+                <div class="col-md-2">
+                  <a (click)="onSubmit(plan.Id)" class="btn btn-outline-primary active">Select Package</a>
+                </div>
+              </div>
             </div>
         </div>
       </div>

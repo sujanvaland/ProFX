@@ -88,6 +88,26 @@ namespace SmartStore.Services.Messages
 			return factory.CreateMessage(messageContext, true, model);
 		}
 
+		public static CreateMessageResult SendPasswordResetMessage(this IMessageFactory factory, Customer customer,
+			string senderEmail, string senderName, string subject, string message, EmailAddress senderEmailAddress, int languageId = 0)
+		{
+			var model = new NamedModelPart("Message")
+			{
+				["Subject"] = subject.NullEmpty(),
+				["Message"] = message.NullEmpty(),
+				["SenderEmail"] = senderEmail.NullEmpty(),
+				["SenderName"] = senderName.HasValue() ? senderName.NullEmpty() : senderEmail.NullEmpty()
+			};
+
+			var messageContext = MessageContext.Create(MessageTemplateNames.CustomerPasswordRecovery, languageId, customer: customer);
+			if (senderEmailAddress != null)
+			{
+				messageContext.SenderEmailAddress = senderEmailAddress;
+			}
+
+			return factory.CreateMessage(messageContext, true, model);
+		}
+
 		/// <summary>
 		/// Sends a newsletter subscription activation message
 		/// </summary>

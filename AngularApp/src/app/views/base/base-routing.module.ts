@@ -29,7 +29,7 @@ import { ChangePasswordComponent } from './changepassword.component';
 import { NewsComponent } from './news.component';
 import { SurfAdsComponent } from './surfads.component';
 import { TransferHistoryComponent } from './transferhistory.component';
-
+import { SignalComponent } from './signals.component';
 
 const routes: Routes = [
   {
@@ -47,6 +47,13 @@ const routes: Routes = [
         component: AddFundComponent,
         data: {
           title: 'Add Fund'
+        }
+      },
+      {
+        path: 'signals',
+        component: SignalComponent,
+        data: {
+          title: 'Pro Signals'
         }
       },
       {

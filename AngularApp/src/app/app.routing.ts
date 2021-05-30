@@ -15,6 +15,10 @@ import { PasswordRecoveryComponent } from './views/passwordrecovery/passwordreco
 import { CountryManagerComponent } from './views/countrymanager/countrymanager.component';
 import { ContactUsComponent } from './views/contactus/contactus.component';
 import { AboutUsComponent } from './views/aboutus/aboutus.component';
+import { TermsComponent } from './views/terms/terms.component';
+import { WebinarsComponent } from './views/webinars/webinars.component';
+import { NewsComponent } from './views/base/news.component';
+import { MainNewsComponent } from './views/news/mainnews.component';
 
 export const routes: Routes = [
   {
@@ -91,6 +95,27 @@ export const routes: Routes = [
     component: AboutUsComponent,
     data: {
       title: 'About Us'
+    }
+  },
+  {
+    path: 'terms',
+    component: TermsComponent,
+    data: {
+      title: 'Terms'
+    }
+  },
+  {
+    path: 'webinars',
+    component: WebinarsComponent,
+    data: {
+      title: 'Webinars'
+    }
+  },
+  {
+    path: 'news',
+    component: MainNewsComponent,
+    data: {
+      title: 'News'
     }
   },
   {

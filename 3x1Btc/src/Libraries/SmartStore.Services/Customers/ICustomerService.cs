@@ -301,7 +301,7 @@ namespace SmartStore.Services.Customers
 		int GetCustomerToken(int CustomerId);
 		int GetTrafficGenerated(int CustomerId);
 		float GetAvailableBalance(int customerid);
-		float GetAccumulatedPair(int customerid);
+		decimal GetAccumulatedPair(int customerid);
 		float GetCustomerROI(int customerid);
 		float GetCustomerCommission(int customerid);
 		float GetCustomerWithdrawal(int customerid);
@@ -334,5 +334,7 @@ namespace SmartStore.Services.Customers
 		float GetNetworkIncome(int CustomerId);
 		float GetTradeIncome(int CustomerId);
 		int GetCurrentActivePlan(int CustomerId);
+		string SpGetBinarySetting(int CustomerId);
+		List<ProSignal> SpGetProSignals();
 	}
 }

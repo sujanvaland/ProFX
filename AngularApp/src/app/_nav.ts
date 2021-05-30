@@ -22,6 +22,11 @@ export const navItems: INavData[] = [
   //   icon: 'icon-basket-loaded'
   // },
   {
+    name: 'Signals',
+    url: '/base/signals',
+    icon: 'fa fa-bell'
+  },
+  {
     name: 'Buy Trade Lots',
     url: '/base/buyadpack',
     icon: 'icon-basket-loaded'
@@ -36,16 +41,16 @@ export const navItems: INavData[] = [
   //   url: '/base/myshares',
   //   icon: 'fa fa-dollar'
   // },
-  // {
-  //   name: 'My Team',
-  //   url: '/base/tree',
-  //   icon: 'fa fa-line-chart'
-  // },
   {
-    name: 'My Network',
-    url: '/base/myteam',
-    icon: 'fa fa-users'
+    name: 'My Team',
+    url: '/base/tree',
+    icon: 'fa fa-line-chart'
   },
+  // {
+  //   name: 'My Network',
+  //   url: '/base/myteam',
+  //   icon: 'fa fa-users'
+  // },
    {
      name: 'Withdrawal',
      url: '/base/withdrawal',

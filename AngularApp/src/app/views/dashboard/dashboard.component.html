@@ -1,81 +1,180 @@
 <div class="animated fadeIn">
   <div class="row" style="margin-top: 25px;">
-    <div class="col-6">
-        <div class="col-sm-12">
-          <div class="card text-white bg-info cardbalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Cash  Wallet : {{CustomerInfoModel.AvailableBalance}}$</div>
+    <div  class="col-xxl-4 col-xl-4 col-lg-12">
+        <div class="card welcome-profile">
+            <div class="card-body">
+                <h4>Welcome , {{CustomerInfoModel.FullName}}</h4>
+                <ul>
+                   <li>
+                        <b>Email : </b>{{CustomerInfoModel.Email}}  
+                    </li>
+                   <li>
+                        <b>Date of Joining : </b>{{CustomerInfoModel.RegistrationDate}}
+                    </li>
+                    <li>
+                        <b>Current Contract : </b>{{CustomerInfoModel.PackageName}}
+                    </li>
+                    <li>
+                        <b>Inviter : </b>{{CustomerInfoModel.ReferredBy}} ({{CustomerInfoModel.AffilateId}})
+                    </li>
+                </ul>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="card text-white bg-warning cardbluebalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Trade Earning : {{CustomerInfoModel.TradeIncome}}$</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="card text-white bg-info cardbalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Active Lots : {{CustomerInfoModel.TodaysPair}}$</div>
-            </div>
-        </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="card text-white bg-warning cardbluebalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Network Earning : {{CustomerInfoModel.NetworkIncome}}$</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="card text-white bg-info cardbalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Direct Earning : {{CustomerInfoModel.DirectBonus}}$</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12">
-          <div class="card text-white bg-info cardbalance">
-            <div class="card-body pb-0">
-              <div class="text-value">Withdraw Amount : {{CustomerInfoModel.CompletedWithdrawal}}$</div>
-            </div>
-          </div>
         </div>
     </div>
-    <div class="col-6" style="background:#262c50; padding:20px;">
-      <table style="color: white;">
-        <tr>
-          <td style="width: 250px;" colspan="2"><b>Name : </b>{{CustomerInfoModel.FullName}}</td>
-          <td rowspan="4"><img style="height: 200px;width: 200px;margin-left: 30px;" src="assets/img/avatars/6.jpg"></td>
-        </tr>
-        <tr>
-          <td style="width: 250px;" colspan="2"><b>Email : </b>{{CustomerInfoModel.Email}}</td>
-        </tr>
-        <tr>
-          <td style="width: 250px;" colspan="2"><b>Date of Joining : </b>{{CustomerInfoModel.RegistrationDate}}</td>
-        </tr>
-        <tr>
-          <td style="width: 250px;" colspan="2"><b>Account Status : </b>{{CustomerInfoModel.Status}}</td>
-        </tr>
-        <tr>
-          <td style="width: 250px;" colspan="2"><b>Inviter : </b>{{CustomerInfoModel.ReferredBy}} ({{CustomerInfoModel.AffilateId}})</td>
-        </tr>
-        <tr>
-          <td colspan="3"><b>Affiliate Link : </b><a target="_blank" href="{{SiteUrl}}?r={{CustomerInfoModel.Name}}">{{SiteUrl}}?r={{CustomerInfoModel.Name}}</a></td>
-        </tr>
-        <tr *ngFor="let board of CustomerBoard">
-            <td colspan="3">
-              {{board.BoardName}} - 
-              <strong>{{board.NoOfPositionFilled}}/{{board.NoOfPositionRemaining + board.NoOfPositionFilled}} Completed ({{board.CompletionPer}}%)</strong>
-              <div class="progress progress-xs mt-2">
-                <div class="progress-bar bg-success" role="progressbar" [ngStyle]='{width: board.style}' aria-valuenow="board.CompletionPer" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="col-xxl-4 col-xl-4 col-lg-12">
+        <div class="card">
+            <div class="card-body binarybox">
+                <div class="invite-content">
+                    <h4>Invite a friend</h4>
+                    <p>You will receive 10% commission for referring friends and more! <br>
+                    </p>
+
+                    <div class="copy-link">
+                        <form action="#">
+                            <div class="input-group">
+                                <input id="my-link-m" #referralLink type="text" class="form-control" value="{{SiteUrl}}?r={{CustomerInfoModel.Username}}">
+                                <span class="input-group-text my-link-copy" (click)="copyInputMessage(referralLink)">Copy</span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </td>
-            
-        </tr>
-      </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-xl-4 col-lg-12">
+        <div class="card">
+            <div class="card-body binarybox">
+                <div class="invite-content">
+                    <h4>Binary Side</h4>
+                    <p>Choose the side for your next indications
+                    </p>
+                    <p class="text-center mb-0 pb-0">
+                    <a (click)="SetBinarySetting('L')" [ngClass]="{'active': CustomerInfoModel.SystemName ==='L'}" class="text-dark btn btn-outline-primary">
+                        Side of Binary:  Left
+                    </a>      
+                    <a  (click)="SetBinarySetting('A')" [ngClass]="{'active': CustomerInfoModel.SystemName ==='A'}" class="text-dark btn btn-outline-primary">
+                        Side of Binary:  Auto
+                    </a>        
+                    <a  (click)="SetBinarySetting('R')" [ngClass]="{'active': CustomerInfoModel.SystemName ==='R'}" class="text-dark btn btn-outline-primary">
+                        Side of Binary:  Right
+                    </a>        
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="dashboardcount">
+            <ul>
+                <li>
+                    <div class="card text-white bg-info cardbalance">
+                        <div class="card-body pb-0">
+                          <div class="text-value"><span>Cash  Wallet</span>{{CustomerInfoModel.AvailableBalance}}$</div>
+                        </div>
+                      </div>
+                </li>
+                <li>
+                    <div class="card text-white bg-warning cardbluebalance">
+                        <div class="card-body pb-0">
+                          <div class="text-value"><span>Daily Bonus</span> {{CustomerInfoModel.TradeIncome}}$</div>
+                        </div>
+                      </div>
+                </li>
+                <li>
+                    <div class="card text-white bg-info cardbalance">
+                        <div class="card-body pb-0">
+                          <div class="text-value"><span>Binary Bonus </span> {{CustomerInfoModel.CyclerIncome}}$</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="card text-white bg-info cardbalance">
+                        <div class="card-body pb-0">
+                          <div class="text-value"><span>Todays Point</span> {{CustomerInfoModel.AccumulatedPairing}}</div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="card text-white bg-info cardbalance">
+                        <div class="card-body pb-0">
+                          <div class="text-value"><span>Direct Bonus </span> {{CustomerInfoModel.DirectBonus}}$</div>
+                        </div>
+                      </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="col-6">
+                <div class="card tasklist">
+                    <div class="card-header">
+                        <h4>Tasks List</h4>
+                    </div>
+                    <div class="card-body">
+                      
+                        <p>See your complete and incomplete tasks.</p>
+
+                        <ul>
+                                                    <li>
+                            <a href="#">
+                                <span class="verified">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
+                                {{WalletMessage}}                    </a>
+                            </li>
+                           <li class="active-contract">
+                                <a href="#">
+                                    <span class="verified">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </span>
+                                    {{TwoFAMessage}}                                  </a>
+                            </li>
+                            <li class="active-contract">
+                                <a href="#">
+                                    <span class="verified">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                    {{ContractMessage}}                                  </a>
+                            </li>
+                            <li class="active-on-binary">
+                                <a href="#">
+                                    <span class="verified">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                    {{BinaryMessge}}                             </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+    </div>
+    <div class="col-6">
+<div class="card tasklist">
+    <div class="card-header">
+        <h4>Binary Tree Summary</h4>
+    </div>
+                    <div class="card-body binarycountbox">
+                       
+                        <ul>
+                            <li><h4>Left</h4></li>
+                           <li>
+                                <b>Users on Left : </b>{{treebalance.LeftUsers}}  
+                            </li>
+                            <li>
+                                <b>Points on Left : </b>{{treebalance.TotalLeftPoint}}
+                            </li>
+                        </ul>
+                        <ul>
+                            <li><h4>Right</h4></li>
+                           <li>
+                                <b>Users on Right : </b>{{treebalance.RightUsers}}
+                            </li>
+                           
+                            <li>
+                                <b>Points on Right : </b>{{treebalance.TotalRightPoint}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
     </div>
     <!-- <div class="col-2"><img src="assets/img/avatars/6.jpg"></div> -->
   </div>

@@ -485,6 +485,15 @@ namespace SmartStore.Services.Messages
 							["SenderName"] = "Jane Doe"
 						});
 						break;
+					case MessageTemplateNames.CustomerPasswordRecovery:
+						result.Add(new NamedModelPart("Message")
+						{
+							["Subject"] = "Test subject",
+							["Message"] = LoremIpsum,
+							["SenderEmail"] = "jane@doe.com",
+							["SenderName"] = "Jane Doe"
+						});
+						break;
 					case MessageTemplateNames.ProductQuestion:
 						result.Add(new NamedModelPart("Message")
 						{

@@ -58,6 +58,10 @@ import { ContactUsComponent } from './views/contactus/contactus.component';
 import { AboutUsComponent } from './views/aboutus/aboutus.component';
 import { FooterComponent } from './views/footer.component';
 import { HeaderComponent } from './views/header.component';
+import { TermsComponent } from './views/terms/terms.component';
+import { NewsComponent } from './views/base/news.component';
+import { WebinarsComponent } from './views/webinars/webinars.component';
+import { MainNewsComponent } from './views/news/mainnews.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -90,6 +94,9 @@ import { HeaderComponent } from './views/header.component';
     HomeComponent,
     FaqComponent,
     AboutUsComponent,
+    TermsComponent,
+    MainNewsComponent,
+    WebinarsComponent,
     ForgotComponent,
     PasswordRecoveryComponent,
     CountryManagerComponent,

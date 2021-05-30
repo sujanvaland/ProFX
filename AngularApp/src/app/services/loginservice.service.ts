@@ -29,6 +29,13 @@ export class LoginserviceService {
       RegisterModel)
   }
 
+GetProSignals()
+  {
+    let url = environment.baseApiUrl + "Login/GetProSignals";
+    return this.http.get<any>(url)
+  }
+  
+
   PasswordRecovery(PasswordRecoveryModel)
   {
     let url = environment.baseApiUrl + "Login/PasswordRecovery";

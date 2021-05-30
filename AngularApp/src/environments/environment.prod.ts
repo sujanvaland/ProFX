@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   siteUrl : "https://profxsignals.net",
-  baseApiUrl: 'http://localhost:82/api/v1/',
+  baseApiUrl: 'https://profxsignals.net/api/v1/',
   coinPaymentMerAcc : 'd99bdec002012a7c6b4cd01c75a27bc9',
   withdrawalFees:0.5,
   AllowFund:true,

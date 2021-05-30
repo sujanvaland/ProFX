@@ -211,6 +211,7 @@ namespace SmartStore.WebApi.Controllers.Api
 			}
 			CustomerInfoModel model = new CustomerInfoModel();
 			var customer = _customerService.GetCustomerById(CustomerId);
+			model.SystemName = customer.SystemName;
 			model.BitcoinAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.BitcoinAddressAcc);
 			model.BankName = customer.GetAttribute<string>(SystemCustomerAttributeNames.BankName);
 			model.AccountHolderName = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountHolderName);
@@ -572,6 +573,45 @@ namespace SmartStore.WebApi.Controllers.Api
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Invlaid 2FA Pin" });
 		}
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.ActionName("UpdateBinaryPlacementSetting")]
+		public HttpResponseMessage UpdateBinaryPlacementSetting(int CustomerId,string Value)
+		{
+			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
+			if (customerguid != null)
+			{
+				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
+				if (CustomerId != cust.Id)
+				{
+					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
+				}
+				cust.SystemName = Value;
+				_customerService.UpdateCustomer(cust);
+			}
+			
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
+		}
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.ActionName("GetBinaryPlacementSetting")]
+		public HttpResponseMessage GetBinaryPlacementSetting(int CustomerId)
+		{
+			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
+			if (customerguid != null)
+			{
+				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
+				if (CustomerId != cust.Id)
+				{
+					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
+				}
+				var placement =_customerService.SpGetBinarySetting(CustomerId);
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Success",Data= placement });
+			}
+
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
+		}
+
 	}
 
 	public class PinValidateRequest

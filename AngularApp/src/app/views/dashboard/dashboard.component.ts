@@ -24,10 +24,11 @@ export class DashboardComponent implements OnInit {
     private advertismenetSerive:AdvertismentService,
     private commonservice:CommonService,
     private router: Router) { }
+ 
   radioModel: string = 'Month';
   CustomerId :string = localStorage.getItem("CustomerId");
   SiteUrl : string = environment.siteUrl;
-  CustomerInfoModel = { Status : '', FullName :'',AvailableBalance :0,TradeIncome:0,NetworkIncome:0,RoyaltyIncome:0,TodaysPair:'',AvailableCoin:0,TotalEarning:0,DirectBonus:0,
+  CustomerInfoModel = { BitcoinAddress:'',Enable2FA:false,TotalReferral:0,SystemName:'',Status : '', FullName :'',AvailableBalance :0,TradeIncome:0,NetworkIncome:0,RoyaltyIncome:0,TodaysPair:'',AvailableCoin:0,TotalEarning:0,DirectBonus:0,
   AvailableCoins:0,UnilevelEarning : 0,CyclerIncome:0,CustomerId:0,RegistrationDate:'',ServerTime :'',ReferredBy:'',AffilateId:0,
   NoOfSecondsToSurf:0,NoOfAdsToSurf:0,PlacementId:0,Position:'',Username:'',PlacementUserName:'',AccumulatedPairing:'',PackageName:''}
   CustomerBoard = [];
@@ -41,6 +42,11 @@ export class DashboardComponent implements OnInit {
   ipn_url:string = '';
   ShowPhaseMessage = true;
   TransactionId = localStorage.getItem("transactionno");
+  WalletMessage = "";
+  ContractMessage = "";
+  TwoFAMessage = "";
+  BinaryMessge = "";
+  treebalance:any = {};
   @ViewChild('infoModal') public infoModal: ModalDirective;
   @ViewChild('congratsModal') public congratsModal: ModalDirective;
   @ViewChild('newsModal') public newsModal: ModalDirective;
@@ -51,93 +57,6 @@ export class DashboardComponent implements OnInit {
       label: 'Series A'
     }
   ];
-  public lineChart2Labels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-  public lineChart2Options: any = {
-    tooltips: {
-      enabled: false,
-      custom: CustomTooltips
-    },
-    maintainAspectRatio: false,
-    scales: {
-      xAxes: [{
-        gridLines: {
-          color: 'transparent',
-          zeroLineColor: 'transparent'
-        },
-        ticks: {
-          fontSize: 2,
-          fontColor: 'transparent',
-        }
-
-      }],
-      yAxes: [{
-        display: false,
-        ticks: {
-          display: false,
-          min: 1 - 5,
-          max: 34 + 5,
-        }
-      }],
-    },
-    elements: {
-      line: {
-        tension: 0.00001,
-        borderWidth: 1
-      },
-      point: {
-        radius: 4,
-        hitRadius: 10,
-        hoverRadius: 4,
-      },
-    },
-    legend: {
-      display: false
-    }
-  };
-  public lineChart2Colours: Array<any> = [
-    { // grey
-      backgroundColor: getStyle('--info'),
-      borderColor: 'rgba(255,255,255,.55)'
-    }
-  ];
-  public lineChart2Legend = false;
-  public lineChart2Type = 'line';
-
-   // barChart1
-   public barChart1Data: Array<any> = [
-    {
-      data: [78, 81, 80, 45, 34, 12, 40, 78, 81, 80, 45, 34, 12, 40, 12, 40],
-      label: 'Series A',
-      barPercentage: 0.6,
-    }
-  ];
-  public barChart1Labels: Array<any> = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'];
-  public barChart1Options: any = {
-    tooltips: {
-      enabled: false,
-      custom: CustomTooltips
-    },
-    maintainAspectRatio: false,
-    scales: {
-      xAxes: [{
-        display: false,
-      }],
-      yAxes: [{
-        display: false
-      }]
-    },
-    legend: {
-      display: false
-    }
-  };
-  public barChart1Colours: Array<any> = [
-    {
-      backgroundColor: 'rgba(255,255,255,.3)',
-      borderWidth: 0
-    }
-  ];
-  public barChart1Legend = false;
-  public barChart1Type = 'bar';
   
   ngOnInit(): void {
         this.CurrencyCode = (localStorage.getItem("CurrencyCode") == null) ? "USD" : localStorage.getItem("CurrencyCode");
@@ -150,16 +69,25 @@ export class DashboardComponent implements OnInit {
         .subscribe(
           res => {
             this.CustomerInfoModel = res.data;
-            let timerId = setInterval(countdown, 1000);
-            let timeleft = this.CustomerInfoModel.NoOfSecondsToSurf;
-            function countdown() {
-              var elem = document.getElementById('divTimer');
-              if (timeleft == -1) {
-                clearInterval();
-              } else {
-                elem.innerHTML = timeleft + ' more';
-                timeleft--;
-              }
+            if(this.CustomerInfoModel.BitcoinAddress != null){
+              this.WalletMessage= "Wallet Address has been configured."
+            }else{
+              this.WalletMessage= "Wallet Address has not been configured."
+            }
+            if(this.CustomerInfoModel.Enable2FA == true){
+              this.TwoFAMessage= "2FA is enabled."
+            }else{
+              this.TwoFAMessage= "2FA is not enabled."
+            }
+            if(this.CustomerInfoModel.Status == "Active"){
+              this.ContractMessage= "Your Contract is Active."
+            }else{
+              this.ContractMessage= "Your Contract is Not Active."
+            }
+            if(this.CustomerInfoModel.TotalReferral > 2){
+              this.BinaryMessge= "You are Qualified on Binary."
+            }else{
+              this.BinaryMessge= "You are not Qualified on Binary."
             }
             if(this.CustomerInfoModel.FullName == null){
               this.router.navigate(['/base/account']);
@@ -186,42 +114,15 @@ export class DashboardComponent implements OnInit {
         let model = {
           CustomerId : this.CustomerId
         }
-        this.customerservice.GetCustomerBoard(model)
-        .subscribe(
-          res => {
-            this.CustomerBoard = res.data.Data;
-           
-            if(this.CustomerBoard.length > 0){
-              this.ShowPhaseMessage = false;
-              this.CustomerBoard.sort(function (a, b) {
-                return a.Id - b.Id;
-              });
-              this.CustomerBoard.forEach((board,index)=>{
-                let per = 0;
-                if(board.NoOfPositionFilled > 0){
-                  per = (board.NoOfPositionFilled/(board.NoOfPositionRemaining + board.NoOfPositionFilled)) * 100
-                }
-                board.CompletionPer = per.toFixed(2);
-                board.style = board.CompletionPer +"%";
-              });
+        
+       
+          this.matrixservice.GetTreeBalance(this.CustomerId).subscribe(
+            response =>{
+                let balance = response.data;
+                this.treebalance = balance[0];
             }
-           
-          },
-          err => {
-            if(err.status == 401){
-              localStorage.clear();
-              this.router.navigate(['/login']);
-            }
-          }
-        )
-
-        // this.advertismenetSerive.GetCountryManager().subscribe(
-        //   res => {
-        //     if(res.Message == "success"){
-        //       this.Managers = res.data;
-        //     }
-        //   }
-        // )
+          );
+        
         
        
         this.commonservice.GetNewsletter().subscribe(
@@ -234,6 +135,21 @@ export class DashboardComponent implements OnInit {
         )
   }
 
+  copyInputMessage(inputElement){
+    inputElement.select();
+    document.execCommand('copy');
+    inputElement.setSelectionRange(0, 0);
+  }
+
+  SetBinarySetting(value){
+    $('.loaderbo').show();
+    this.customerservice.UpdateBinaryPlacementSetting(this.CustomerId,value).subscribe(
+    res => {
+      this.CustomerInfoModel.SystemName =value;
+      this.toastr.success("Placment Setting Updated");
+      $('.loaderbo').hide();
+    })
+  }
   countshare(){
     alert("shared link");
   }

@@ -304,10 +304,21 @@ namespace SmartStore.WebApi.Controllers.Api
 			{
 				if (ModelState.IsValid)
 				{
+					try
+					{
+						var addr = new System.Net.Mail.MailAddress(model.Email);
+					}
+					catch
+					{
+						model.Username = model.Email;
+						model.Email = null;
+					}
+
 					if (_customerSettings.UsernamesEnabled && model.Username != null)
 					{
 						model.Username = model.Username.Trim();
 					}
+
 
 					if (_customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password))
 					{
@@ -325,7 +336,7 @@ namespace SmartStore.WebApi.Controllers.Api
 						{
 							if (customer != null)
 							{
-								var tokenString = GenerateJSONWebToken(_customerSettings.UsernamesEnabled ? customer.Username : customer.Email);
+								var tokenString = GenerateJSONWebToken(customer.Email);
 								_customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 								var c = JsonConvert.SerializeObject(customer, new JsonSerializerSettings
 								{
@@ -454,8 +465,7 @@ namespace SmartStore.WebApi.Controllers.Api
 				//check whether registration is allowed
 				if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
 				{
-					//Registrition Disable
-					//(int)UserRegistrationType.Disabled
+					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Registration is disabled" });
 				}
 
 				var customer = _customerService.InsertGuestCustomerNew(model.PlacementId, model.Position);
@@ -543,6 +553,11 @@ namespace SmartStore.WebApi.Controllers.Api
 				}
 				else
 				{
+					try
+					{
+						_customerService.DeleteCustomer(customer);
+					}
+					catch { };
 					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = registrationResult.Errors[0] });
 				}
 			}
@@ -554,6 +569,132 @@ namespace SmartStore.WebApi.Controllers.Api
 		}
 
 
+		//[System.Web.Http.HttpPost]
+		//[System.Web.Http.ActionName("PasswordRecovery")]
+		//public HttpResponseMessage PasswordRecoverySend(PasswordRecoveryModel model)
+		//{
+		//	var response = this.Request.CreateResponse();
+		//	string jsonString = "";
+
+
+		//	//string accountSid = "ACc887bcf83d1f79d47ed76860c6dd288f"; //Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+		//	//string authToken = "9ef4bc2a45051f3e79a85ffbb19bfd61"; //Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+
+		//	//TwilioClient.Init(accountSid, authToken);
+
+		//	var customer = _customerService.GetCustomerByUsername(model.Email);
+		//	if (customer.Id > 0)
+		//	{
+		//		_workContext.CurrentCustomer = customer;
+		//	}
+		//	else
+		//	{
+		//		model.ResultMessage = "Invalid Phone number";
+		//		model.ResultState = PasswordRecoveryResultState.Success;
+		//		response.StatusCode = HttpStatusCode.OK;
+		//		return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "invalidusername", data = model.ResultMessage });
+
+		//	}
+
+		//	var Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+		//	if(model.Phone != Phone)
+		//	{
+		//		model.ResultMessage = "Invalid Phone number";
+		//		model.ResultState = PasswordRecoveryResultState.Success;
+		//		response.StatusCode = HttpStatusCode.OK;
+		//		return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "invalidphone", data = model.ResultMessage });
+		//	}
+
+		//	//string accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
+		//	//string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
+
+		//	//TwilioClient.Init(accountSid, authToken);
+
+		//	//if (string.IsNullOrEmpty(model.OTP))
+		//	//{
+		//	//	var message1 = MessageResource.Create(
+		//	//		body: "This is the ship that made the Kessel Run in fourteen parsecs?",
+		//	//		from: new Twilio.Types.PhoneNumber("+17192498304"),
+		//	//		to: new Twilio.Types.PhoneNumber("+919974242686")
+		//	//	);
+		//	//}
+
+		//	try
+		//	{
+		//		if (customer != null && customer.Active && !customer.Deleted)
+		//		{
+		//			var passwordRecoveryToken = Guid.NewGuid();
+
+		//			if (!string.IsNullOrEmpty(model.OTP))
+		//			{
+		//				var OTP = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordResetOTP);
+
+		//				if (OTP == model.OTP)
+		//				{
+		//					Random generator = new Random();
+		//					String newpassword = generator.Next(0, 1000000).ToString("D6");
+		//					var changePassRequest = new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, newpassword);
+		//					var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
+
+		//					if (changePassResult.Success)
+		//					{
+		//						var message1 = MessageResource.Create(
+		//							body: "Your new MagicBosster Password : " + newpassword,
+		//							from: new Twilio.Types.PhoneNumber("+17192498304"),
+		//							to: new Twilio.Types.PhoneNumber(Phone)
+		//						);
+		//					}
+
+		//					//_genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
+		//					//Services.MessageFactory.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
+
+		//					model.ResultMessage = "New Password sent to your phone";
+		//					model.ResultState = PasswordRecoveryResultState.Success;
+		//					response.StatusCode = HttpStatusCode.OK;
+		//					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = model.ResultMessage });
+		//				}
+		//				else
+		//				{
+		//					model.ResultMessage = _localizationService.GetResource("Enter Valid OTP");
+		//					return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = model.ResultMessage });
+		//				}
+		//			}
+		//			else
+		//			{
+		//				Random generator = new Random();
+		//				String r = generator.Next(0, 1000000).ToString("D6");
+
+		//				_genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordResetOTP, r);
+
+		//				var message1 = MessageResource.Create(
+		//					body: "Reset Password OTP : " + r,
+		//					from: new Twilio.Types.PhoneNumber("+17192498304"),
+		//					to: new Twilio.Types.PhoneNumber(Phone)
+		//				);
+
+		//				model.ResultMessage = _localizationService.GetResource("OTP Sent on your registered Phone Number");
+		//				model.ResultState = PasswordRecoveryResultState.Success;
+		//				response.StatusCode = HttpStatusCode.OK;
+		//				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "otpsent", data = model.ResultMessage });
+		//			}					
+		//		}
+		//		else
+		//		{
+		//			model.ResultMessage = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
+		//			model.ResultState = PasswordRecoveryResultState.Success;
+		//			//model.ResultMessage = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
+		//			//model.ResultState = PasswordRecoveryResultState.Error;
+		//			return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = model.ResultMessage });
+
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = "something went wrong" });
+		//	}
+		//}
+
+
 		[System.Web.Http.HttpPost]
 		[System.Web.Http.ActionName("PasswordRecovery")]
 		public HttpResponseMessage PasswordRecoverySend(PasswordRecoveryModel model)
@@ -561,117 +702,40 @@ namespace SmartStore.WebApi.Controllers.Api
 			var response = this.Request.CreateResponse();
 			string jsonString = "";
 
-
-			string accountSid = "ACc887bcf83d1f79d47ed76860c6dd288f"; //Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
-			string authToken = "9ef4bc2a45051f3e79a85ffbb19bfd61"; //Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
-
-			TwilioClient.Init(accountSid, authToken);
-
-			var customer = _customerService.GetCustomerByUsername(model.Email);
+			var customer = _customerService.GetCustomerByEmail(model.Email);
 			if (customer.Id > 0)
 			{
 				_workContext.CurrentCustomer = customer;
 			}
-			else
-			{
-				model.ResultMessage = "Invalid Phone number";
-				model.ResultState = PasswordRecoveryResultState.Success;
-				response.StatusCode = HttpStatusCode.OK;
-				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "invalidusername", data = model.ResultMessage });
-
-			}
-
-			var Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-			if(model.Phone != Phone)
-			{
-				model.ResultMessage = "Invalid Phone number";
-				model.ResultState = PasswordRecoveryResultState.Success;
-				response.StatusCode = HttpStatusCode.OK;
-				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "invalidphone", data = model.ResultMessage });
-			}
-
-			//string accountSid = Environment.GetEnvironmentVariable("TWILIO_ACCOUNT_SID");
-			//string authToken = Environment.GetEnvironmentVariable("TWILIO_AUTH_TOKEN");
-
-			//TwilioClient.Init(accountSid, authToken);
-
-			//if (string.IsNullOrEmpty(model.OTP))
-			//{
-			//	var message1 = MessageResource.Create(
-			//		body: "This is the ship that made the Kessel Run in fourteen parsecs?",
-			//		from: new Twilio.Types.PhoneNumber("+17192498304"),
-			//		to: new Twilio.Types.PhoneNumber("+919974242686")
-			//	);
-			//}
-
+			
 			try
 			{
 				if (customer != null && customer.Active && !customer.Deleted)
 				{
 					var passwordRecoveryToken = Guid.NewGuid();
+					Random generator = new Random();
+					String newpassword = generator.Next(0, 1000000).ToString("D6");
+					var changePassRequest = new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, newpassword);
+					var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
 
-					if (!string.IsNullOrEmpty(model.OTP))
+					if (changePassResult.Success)
 					{
-						var OTP = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordResetOTP);
+						var subject = "New Password Request";
+						var body = Core.Html.HtmlUtils.FormatText("Your new password is " + newpassword, false, true, false, false, false, false);
+						// email
+						//var msg = _services.MessageFactory.SendContactUsMessage(_workContext.CurrentCustomer, customer.Email, customer.GetFullName(), subject, body, null);
+						var msg = _services.MessageFactory.SendPasswordResetMessage(_workContext.CurrentCustomer, customer.Email, customer.GetFullName(), subject, body, null);
 
-						if (OTP == model.OTP)
-						{
-							Random generator = new Random();
-							String newpassword = generator.Next(0, 1000000).ToString("D6");
-							var changePassRequest = new ChangePasswordRequest(customer.Email, false, _customerSettings.DefaultPasswordFormat, newpassword);
-							var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
-
-							if (changePassResult.Success)
-							{
-								var message1 = MessageResource.Create(
-									body: "Your new MagicBosster Password : " + newpassword,
-									from: new Twilio.Types.PhoneNumber("+17192498304"),
-									to: new Twilio.Types.PhoneNumber(Phone)
-								);
-							}
-
-							//_genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
-							//Services.MessageFactory.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
-
-							model.ResultMessage = "New Password sent to your phone";
-							model.ResultState = PasswordRecoveryResultState.Success;
-							response.StatusCode = HttpStatusCode.OK;
-							return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = model.ResultMessage });
-						}
-						else
-						{
-							model.ResultMessage = _localizationService.GetResource("Enter Valid OTP");
-							return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = model.ResultMessage });
-						}
-					}
-					else
-					{
-						Random generator = new Random();
-						String r = generator.Next(0, 1000000).ToString("D6");
-
-						_genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordResetOTP, r);
-
-						var message1 = MessageResource.Create(
-							body: "Reset Password OTP : " + r,
-							from: new Twilio.Types.PhoneNumber("+17192498304"),
-							to: new Twilio.Types.PhoneNumber(Phone)
-						);
-
-						model.ResultMessage = _localizationService.GetResource("OTP Sent on your registered Phone Number");
+						model.ResultMessage = "New Password sent to your phone";
 						model.ResultState = PasswordRecoveryResultState.Success;
 						response.StatusCode = HttpStatusCode.OK;
-						return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "otpsent", data = model.ResultMessage });
-					}					
+						return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = model.ResultMessage });
+					}
 				}
-				else
-				{
-					model.ResultMessage = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
-					model.ResultState = PasswordRecoveryResultState.Success;
-					//model.ResultMessage = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
-					//model.ResultState = PasswordRecoveryResultState.Error;
-					return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = model.ResultMessage });
-
-				}
+				model.ResultMessage = "Something went wrong";
+				model.ResultState = PasswordRecoveryResultState.Success;
+				response.StatusCode = HttpStatusCode.OK;
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "fail", data = model.ResultMessage });
 			}
 			catch (Exception ex)
 			{
@@ -863,7 +927,7 @@ namespace SmartStore.WebApi.Controllers.Api
 				{
 					CustomerName = customer.Email;
 				}
-				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = new { name = CustomerName } });
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = new { name = CustomerName,id = customer.Id, placement = customer.SystemName } });
 			}
 			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Invalid Inviter" });
 		}
@@ -884,5 +948,23 @@ namespace SmartStore.WebApi.Controllers.Api
 				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Some thing went wrong" });
 			}
 		}
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.ActionName("GetProSignals")]
+		public HttpResponseMessage GetProSignals()
+		{
+			var response = this.Request.CreateResponse(HttpStatusCode.OK);
+			try
+			{
+				var signals = _customerService.SpGetProSignals();
+				//var newsletters = _adCampaignService.GetCountryManager();
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = signals });
+			}
+			catch (Exception ex)
+			{
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Some thing went wrong" });
+			}
+		}
+		
 	}
 }

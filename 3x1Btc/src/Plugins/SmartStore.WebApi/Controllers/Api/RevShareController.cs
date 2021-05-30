@@ -228,6 +228,15 @@ namespace SmartStore.WebApi.Controllers.Api
 					}
 				}
 				var Customer = _customerService.GetCustomerById(customerPlanModel.CustomerId);
+				var exisitingPlan = _customerService.GetCurrentPlanList(customerPlanModel.CustomerId);
+				if(exisitingPlan.PlanId > 0)
+				{
+					if(exisitingPlan.PlanId >= customerPlanModel.PlanId)
+					{
+						message = "Choose higher package to upgrade";
+						return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = message });
+					}
+				}
 				if (ModelState.IsValid)
 				{
 
@@ -238,7 +247,7 @@ namespace SmartStore.WebApi.Controllers.Api
 					{
 						var plan = _planService.GetPlanById(customerPlanModel.PlanId);
 						var repurchasebalance = _customerService.GetAvailableBalance(Customer.Id);
-						var amountreq = Convert.ToInt64(plan.MinimumInvestment); //Convert.ToInt64(plan.MinimumInvestment) * ((customerPlanModel.NoOfPosition == 0) ? 1 : customerPlanModel.NoOfPosition);
+						var amountreq = exisitingPlan == null ? Convert.ToInt64(plan.MinimumInvestment) : Convert.ToInt64(plan.MinimumInvestment) - exisitingPlan.AmountInvested; //Convert.ToInt64(plan.MinimumInvestment) * ((customerPlanModel.NoOfPosition == 0) ? 1 : customerPlanModel.NoOfPosition);
 
 						if (repurchasebalance < amountreq * customerPlanModel.NoOfPosition)
 						{
@@ -261,7 +270,7 @@ namespace SmartStore.WebApi.Controllers.Api
 						transcation.TranscationTypeId = (int)TransactionType.Purchase;
 						transcation.StatusId = (int)Status.Completed;
 						_transactionService.InsertTransaction(transcation);
-
+						
 						for (int i = 0; i < customerPlanModel.NoOfPosition; i++)
 						{
 							var customerplan = new CustomerPlan();
@@ -271,6 +280,11 @@ namespace SmartStore.WebApi.Controllers.Api
 							customerplan.UpdatedOnUtc = DateTime.Now;
 							customerplan.PlanId = plan.Id;
 							customerplan.AmountInvested = plan.MaximumInvestment;
+							if(exisitingPlan != null)
+							{
+								customerplan.ROIPaid = exisitingPlan.ROIPaid;
+								customerplan.NoOfPayoutPaid = exisitingPlan.NoOfPayoutPaid;
+							}
 							customerplan.ROIToPay = (plan.MaximumInvestment * plan.ROIPercentage/100) * plan.NoOfPayouts;
 							customerplan.NoOfPayout = plan.NoOfPayouts;
 							customerplan.ExpiredDate = DateTime.Today;
@@ -283,7 +297,14 @@ namespace SmartStore.WebApi.Controllers.Api
 
 							_customerService.SpPayNetworkIncome(customerplan.CustomerId, customerplan.PlanId);
 						}
-
+						if (exisitingPlan != null)
+						{
+							exisitingPlan.IsActive = false;
+							exisitingPlan.IsExpired = true;
+							exisitingPlan.ROIPaid = 0;
+							exisitingPlan.NoOfPayoutPaid = 0;
+							_customerPlanService.UpdateCustomerPlan(exisitingPlan);
+						}
 
 						message = "Your purchase was successfull";
 						//ReleaseLevelCommission(plan.Id, Customer, transactionModel.Amount);

@@ -175,6 +175,8 @@ namespace SmartStore.Services.Boards
 		public int TotalLeftPoint { get; set; }
 		public int TotalRightPoint { get; set; }
 		public int PointPaidTillDate { get; set; }
+		public int LeftUsers { get; set; }
+		public int RightUsers { get; set; }
 		public int Balance { get; set; }
 	}
 	public class MyBoardMember

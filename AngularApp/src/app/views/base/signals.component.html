@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+  <div class="card" > 
+    <div class="card-header">
+      <i class="fa fa-align-justify"></i>Pro Signals
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Trade Id</th>
+            <th>Type</th>
+            <th>Pair</th>
+            <th>Quantity</th>
+            <th>Entry Price</th>
+            <th>Stop Loss</th>
+            <th>Take Profit</th>
+            <th>Trade Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let purchase of ProSignals">
+            <td>{{purchase.Id}}</td>
+            <td>{{purchase.TradeType}}</td>
+            <td>{{purchase.Pair}}</td>
+            <td>{{purchase.Quantity}}</td>
+            <td>{{purchase.EntryPrice}}</td>
+            <td>{{purchase.StopLoss}}</td>
+            <td>{{purchase.TakeProfit}}</td>
+            <td>{{purchase.TradeDate |  date:'mediumDate'}}</td>
+            <td>
+              <span [ngClass]="{'badge-success': purchase.Status == 'Pass',
+                                'badge-danger': purchase.Status == 'Fail'}" class="badge">{{purchase.Status}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

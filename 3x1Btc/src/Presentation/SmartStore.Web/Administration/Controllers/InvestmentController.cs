@@ -672,22 +672,22 @@ namespace SmartStore.Admin.Controllers
 					}
 				}
 
-				var substrans = _workContext.CurrentCustomer.Transaction.Where(x => x.StatusId == 2 && x.TranscationNote == "subscription").FirstOrDefault();
-				if (substrans != null)
-				{
-					var noOfDays = substrans.NoOfPosition * 30;
-					var SubscriptionEndDate = substrans.CreatedOnUtc.AddDays(noOfDays);
-					if (SubscriptionEndDate < DateTime.Today)
-					{
-						NotifyError("Please activate your Subscription");
-						return RedirectToAction("SubscriptionActive", "ActiveSubscription");
-					}
-				}
-				else
-				{
-					NotifyError("Please activate your Subscription");
-					return RedirectToAction("SubscriptionActive", "ActiveSubscription");
-				}
+				//var substrans = _workContext.CurrentCustomer.Transaction.Where(x => x.StatusId == 2 && x.TranscationNote == "subscription").FirstOrDefault();
+				//if (substrans != null)
+				//{
+				//	var noOfDays = substrans.NoOfPosition * 30;
+				//	var SubscriptionEndDate = substrans.CreatedOnUtc.AddDays(noOfDays);
+				//	if (SubscriptionEndDate < DateTime.Today)
+				//	{
+				//		NotifyError("Please activate your Subscription");
+				//		return RedirectToAction("SubscriptionActive", "ActiveSubscription");
+				//	}
+				//}
+				//else
+				//{
+				//	NotifyError("Please activate your Subscription");
+				//	return RedirectToAction("SubscriptionActive", "ActiveSubscription");
+				//}
 				if (model.Amount <= 0)
 				{
 					NotifyError("Enter correct amount");

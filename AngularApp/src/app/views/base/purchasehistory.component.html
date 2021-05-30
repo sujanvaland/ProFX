@@ -9,7 +9,7 @@
           <tr>
             <th>Purchase Id</th>
             <th>Amount</th>
-            <th>Processor Name</th>
+            <!-- <th>Processor Name</th> -->
             <th>Purchase Date</th>
             <th>Status</th>
           </tr>
@@ -18,7 +18,7 @@
           <tr *ngFor="let purchase of PurchaseData">
             <td>{{purchase.Id}}</td>
             <td>{{purchase.FinalAmountRaw}}</td>
-            <td>{{purchase.TranscationTypeString}}</td>
+            <!-- <td>{{purchase.TranscationTypeString}}</td> -->
             <td>{{purchase.TransactionDate |  date:'mediumDate'}}</td>
             <td>
               <span [ngClass]="{'badge-success': purchase.StatusId == 2,

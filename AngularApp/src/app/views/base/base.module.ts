@@ -59,6 +59,7 @@ import { ChangePasswordComponent } from './changepassword.component';
 import { NewsComponent } from './news.component';
 import { SurfAdsComponent, SafePipe } from './surfads.component';
 import { TransferHistoryComponent } from './transferhistory.component';
+import { SignalComponent } from './signals.component';
 
 @NgModule({
   imports: [
@@ -105,7 +106,8 @@ import { TransferHistoryComponent } from './transferhistory.component';
     NewsComponent,
     SurfAdsComponent,
     SafePipe,
-    NewSafePipe
+    NewSafePipe,
+    SignalComponent
   ]
 })
 export class BaseModule { }

@@ -4,6 +4,7 @@ import {LoginserviceService } from '../../services/loginservice.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import * as $ from 'jquery';
+import { CustomerService } from '../../services/customer.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit{
   submitted = false;
   constructor(private formBuilder: FormBuilder,
     private loginserviceService:LoginserviceService,
+    private customerservice: CustomerService,
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService) { }
@@ -28,46 +30,52 @@ ngOnInit (){
       Password: ['', [Validators.required,Validators.minLength(5)]],
       ConfirmPassword: ['', [Validators.required,Validators.minLength(5)]],
       SponsorsName: ['', Validators.required],
+      PlacementUserName: ['', Validators.required],
       FirstName: ['', Validators.required],
       Phone: ['', Validators.required],
       UserName: ['', [Validators.required,Validators.pattern("^[a-zA-Z0-9\s]*$")]],
+      Position:'',
     });
     
-    
+    $('.loaderbo').show();
     let inviter = "";
+    
     this.route.queryParams
     .subscribe(params => {
       if(params.r){
         inviter = params.r;
-        // localStorage.setItem("inviter",inviter);
-        this.placementid = params.r;
-        this.position = params.p
+      }else{
+        inviter = localStorage.getItem("inviter");
       }
-      // else{
-      //   inviter = localStorage.getItem("inviter");
-      // }
-      // if(inviter == null || inviter == undefined || inviter == ""){
-      //   inviter = "2";
-      //   localStorage.setItem("inviter",inviter);
-      // }
+      debugger
+      this.loginserviceService.GetInviterDetail(inviter).subscribe(
+        res =>{
+          if(res.Message == "success"){
+            this.inviterName = res.data.name;
+            this.position = res.data.placement;
+            this.customerservice.GetBinaryPlacementSetting(res.data.id).subscribe(result=>{
+              this.placementid = result.Data;
+              this.register.get('PlacementUserName').setValue(this.placementid);
+              this.register.get('SponsorsName').setValue(inviter);
+              this.register.get('Position').setValue(this.position);
+            },err => {  
+              $('.loaderbo').hide();
+            })
+
+            $('.loaderbo').hide();
+          }
+          else{
+            this.toastr.error(res.Message)
+            $('.loaderbo').hide();
+          }
+        },
+        err => {  
+          $('.loaderbo').hide();
+        }
+      );
     });
     
-    this.loginserviceService.GetInviterDetail(inviter).subscribe(
-      res =>{
-        if(res.Message == "success"){
-          this.inviterName = res.data.name;
-          $('.loaderbo').hide();
-        }
-        else{
-          this.toastr.error(res.Message)
-          $('.loaderbo').hide();
-        }
-      },
-      err => {  
-       
-        $('.loaderbo').hide();
-      }
-    );
+    
 }
 
 get primEmail(){

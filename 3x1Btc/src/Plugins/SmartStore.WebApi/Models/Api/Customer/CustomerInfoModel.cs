@@ -12,7 +12,7 @@ namespace SmartStore.WebApi.Models.Api.Customer
     {
 		public string StokistCommision { get; set; }
 
-		public float AccumulatedPairing { get; set; }
+		public decimal AccumulatedPairing { get; set; }
 		public string PackageName { get; set; }
 		public string SponsorsName { get; set; }
 		public string PlacementUserName { get; set; }
@@ -24,7 +24,7 @@ namespace SmartStore.WebApi.Models.Api.Customer
 		public string Position { get; set; }
 
 		public int PlacementId { get; set; }
-
+		public string SystemName { get; set; }
 		public int? Id { get; set; }
 		public int CustomerId { get; set; }
 		public Guid? CustomerGuid { get; set; }

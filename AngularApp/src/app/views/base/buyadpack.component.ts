@@ -35,7 +35,6 @@ constructor(
   private router: Router) { }
 
     ngOnInit (){
-
       this.stName = this.formBuilder.group({
         NoOfPack: [''],
       });
@@ -43,19 +42,27 @@ constructor(
         if(!environment.AllowAdPack){
           this.toastr.info("Purchase is diabled till launch date");
         }
+        $('.loaderbo').show(); 
+        
 
+      this.customerservice.GetPlanDetail(this.CustomerId).subscribe(result =>{
+        this.plan = result.data;
+      })
+      
         this.revshare.GetPlan().subscribe(res=>{
           this.Plans = res?.data;
-          console.log(this.Plans);
+          $('.loaderbo').hide();
         })
+
+
     }
 
-    onSubmit() {
-      if(this.plan.Id > 0){
+    onSubmit(planId) {
+      if(planId > 0){
         if(confirm("Are you sure you want to make this purchase")) {          
           let CustomerPlanModel = {
             CustomerId : this.CustomerId,
-            PlanId : this.plan.Id,
+            PlanId : planId,
             NoOfPosition:1
           }
           $('.loaderbo').show();       
@@ -65,14 +72,17 @@ constructor(
               this.stName.value.NoOfPack = 0;
               this.Total = 0;
               this.router.navigate(['/dashboard']);
+              
             }
             else{
               this.toastr.error(res.Message);
-            }                
+            }    
+            $('.loaderbo').hide();            
           },
           err => {
             if(err.status == 401){
               localStorage.clear();
+              $('.loaderbo').hide();
               this.router.navigate(['/login']);
             }
             else{
@@ -84,6 +94,6 @@ constructor(
         this.toastr.error("Please select package","Error")
       }
         
-      $('.loaderbo').hide();
+      
      }
 }

@@ -223,12 +223,12 @@ namespace SmartStore.Admin.Controllers
 				//	model.NoOfAdsToSurf = 0;
 				//}
 				ViewBag.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
-				var substrans = _workContext.CurrentCustomer.Transaction.Where(x => x.StatusId == 2 && x.TranscationNote == "subscription").FirstOrDefault();
-				if(substrans != null)
-				{
-					var noOfDays = substrans.NoOfPosition * 30;
-					ViewBag.SubscriptionDate = substrans.CreatedOnUtc.AddDays(noOfDays).ToShortDateString();
-				}
+				//var substrans = _workContext.CurrentCustomer.Transaction.Where(x => x.StatusId == 2 && x.TranscationNote == "subscription").FirstOrDefault();
+				//if(substrans != null)
+				//{
+				//	var noOfDays = substrans.NoOfPosition * 30;
+				//	ViewBag.SubscriptionDate = substrans.CreatedOnUtc.AddDays(noOfDays).ToShortDateString();
+				//}
 				return View(model);
 			}
         }

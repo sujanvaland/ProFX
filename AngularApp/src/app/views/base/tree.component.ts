@@ -41,16 +41,15 @@ export class TreeComponent {
   }
 
   getTreeData(customerid){
-   
     this.GetTeam(customerid);
     this.GetTreeBalance(customerid);
   }
+
   GetTeam(CustId){
     this.TreeViewHTML = "";
     this.matrixservice.GetTreeView(CustId).subscribe(
       response =>{
           this.MyTreeView = response.data;
-          console.log(response.data);
           let level = 1;
           if(this.MyTreeView.length > 0){
             let parentRow = this.MyTreeView.find(element => element.parentid == 0);
@@ -70,12 +69,10 @@ export class TreeComponent {
       }
     );
   }
-  myFunc(Id){
-    alert(Id)
-  };
+ 
   display_with_children(parentRow, level) { 
       this.TreeViewHTML +=  '<li><span class="tf-nc"><img src="assets/img/usertree.png"/><br><a target="_blank" href="#/base/tree?customerid='+parentRow.CustomerId+'">'+ 
-      parentRow.Name +'</a> <br/>(' + parentRow.BoardName+')<br/>(' + parentRow.PurchaseDate+')</span>';
+      parentRow.Name +'</a> <br/>(' + parentRow.BoardName+')</span>';
       let childlist = this.MyTreeView.filter(node =>node.parentid == parentRow.CustomerId)
       let newchildList = [];
       childlist.forEach(childnode =>{

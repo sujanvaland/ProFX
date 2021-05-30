@@ -20,9 +20,9 @@ export class ForgotComponent implements OnInit{
 
 ngOnInit (){
     this.login =this.formBuilder.group({
-      Email: ['', [Validators.required]],
-      Phone: ['', [Validators.required]],
-      OTP : ['']
+      Email: ['', [Validators.required]]
+      // Phone: ['', [Validators.required]],
+      // OTP : ['']
   });
 }
 
@@ -49,30 +49,31 @@ phonenumber(inputtxt) {
         this.loginservice.PasswordRecovery(this.login.value)
         .subscribe(
           res => {
-            if(res.Message == "otpsent"){
-              this.toastr.success("OTP Sent Successfully","Success");
-              this.otpSuccess = true;
-              $('.loaderbo').hide();
-            }
-            else if(res.Message == "success"){
-              this.toastr.success("New Password sent to your Phone Successfully","Success");
+            // if(res.Message == "otpsent"){
+            //   this.toastr.success("OTP Sent Successfully","Success");
+            //   this.otpSuccess = true;
+            //   $('.loaderbo').hide();
+            // }
+            // else 
+            if(res.Message == "success"){
+              this.toastr.success("New Password sent to your Email Successfully","Success");
               $('.loaderbo').hide();
               this.router.navigate(['/login']);
             }
-            else if(res.Message == "invalidphone"){
-              this.toastr.error("Invalid Phone number","Fail");
+            // else if(res.Message == "invalidphone"){
+            //   this.toastr.error("Invalid Phone number","Fail");
        
-              $('.loaderbo').hide();
-            }
-            else if(res.Message == "invalidusername"){
-              this.toastr.error("Invalid Username","Fail");
+            //   $('.loaderbo').hide();
+            // }
+            // else if(res.Message == "invalidusername"){
+            //   this.toastr.error("Invalid Username","Fail");
     
-              $('.loaderbo').hide();
-            }
-            else{
-              this.toastr.error("Something is wrong, contact support","Error");
-              $('.loaderbo').hide();
-            }
+            //   $('.loaderbo').hide();
+            // }
+            // else{
+            //   this.toastr.error("Something is wrong, contact support","Error");
+            //   $('.loaderbo').hide();
+            // }
           },
           err =>{
             this.toastr.error("Something went wrong, contact support","Error");

@@ -940,7 +940,7 @@ namespace SmartStore.Services.Customers
 			if (customer == null)
 				return null;
 
-			return _customerPlanRepository.Table.Where(e => e.CustomerId == CustomerId).FirstOrDefault();
+			return _customerPlanRepository.Table.Where(e => e.CustomerId == CustomerId && e.IsActive == true && e.IsExpired == false).FirstOrDefault();
 		}
 		public virtual float GetCoinEarning(int customerid)
 		{
@@ -978,19 +978,20 @@ namespace SmartStore.Services.Customers
 		#endregion
 
 		#region Transaction
-		public virtual float GetAccumulatedPair(int customerid)
+		public virtual decimal GetAccumulatedPair(int customerid)
 		{
 			var customer = GetCustomerById(customerid);
 			if (customer == null)
 				return 0;
 
-			var AccumulatedPair = _transactionRepository.Table.Where(e => e.CustomerId == customerid && e.TranscationTypeId == 3).ToList();
+			var AccumulatedPair = _transactionRepository.Table.Where(e => e.CustomerId == customerid && e.TranscationTypeId == 7).ToList();
 			if (AccumulatedPair.Count() > 0)
 			{
 				return AccumulatedPair.Sum(x => x.NoOfPosition);
 			}
 			return 0;
 		}
+
 
 		public virtual float GetAvailableBalance(int customerid)
 		{
@@ -1287,6 +1288,25 @@ namespace SmartStore.Services.Customers
 			return id.FirstOrDefault();
 		}
 
+		public string SpGetBinarySetting(int CustomerId)
+		{
+			SqlParameter pCustomerId = new SqlParameter();
+			pCustomerId.ParameterName = "CustomerId";
+			pCustomerId.Value = CustomerId;
+			pCustomerId.DbType = DbType.Int32;
+
+			var placement = _dbContext.SqlQuery<string>("Exec SpGetBinarySetting @CustomerId", pCustomerId).ToList();
+			return placement.FirstOrDefault();
+		}
+
+		public List<ProSignal> SpGetProSignals()
+		{
+			var placement = _dbContext.SqlQuery<ProSignal>("Exec SpGetProSignals").ToList();
+			return placement;
+		}
+
+		
+
 		public CustomerTraffic InsertCustomerTraffic(CustomerTraffic customerTraffic)
 		{
 			var trafficexist = _customerTrafficRepository.Table.Where(x => x.IpAddress == customerTraffic.IpAddress && x.CustomerId == customerTraffic.CustomerId).FirstOrDefault();
@@ -1390,6 +1410,21 @@ namespace SmartStore.Services.Customers
 		public int AvailableImpression { get; set; }
 		public int AvailableClick { get; set; }
 	}
+
+	public partial class ProSignal
+	{
+		public int Id { get; set; }
+		public string Pair { get; set; }
+		public string TradeType { get; set; }
+		public string Quantity { get; set; }
+		public string EntryPrice { get; set; }
+		public string StopLoss { get; set; }
+		public string TakeProfit { get; set; }
+		public DateTime TradeDate { get; set; }
+		public string Status { get; set; }
+	}
+
+
 	public partial class CustomerBoardPosition
 	{
 		public int Id { get; set; }

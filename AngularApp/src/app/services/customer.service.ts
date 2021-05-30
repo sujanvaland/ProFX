@@ -10,9 +10,20 @@ export class CustomerService {
   
   GetCustomerInfo(CustomerId)
   {
-    console.log(CustomerId);
     let url = environment.baseApiUrl + "Customer/GetCustomerInfo?CustomerId="+CustomerId;
     return this.http.post<any>(url,null)
+  }
+
+
+  GetBinaryPlacementSetting(CustomerId)
+  {
+    let url = environment.baseApiUrl + "Customer/GetBinaryPlacementSetting?CustomerId="+CustomerId;
+    return this.http.get<any>(url)
+  }
+  UpdateBinaryPlacementSetting(CustomerId,Value)
+  {
+    let url = environment.baseApiUrl + "Customer/UpdateBinaryPlacementSetting?CustomerId="+CustomerId+"&Value="+Value;
+    return this.http.get<any>(url)
   }
 
   GetStokistDetail(UserName){
@@ -27,7 +38,6 @@ export class CustomerService {
 
   GetCoinRequestList(CustomerId)
   {
-    console.log(CustomerId);
     let url = environment.baseApiUrl + "Customer/GetCoinRequestList?CustomerId="+CustomerId;
     return this.http.post<any>(url,null)
   }
