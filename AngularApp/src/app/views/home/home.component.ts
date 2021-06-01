@@ -45,7 +45,7 @@ ngOnInit (){
         this.LaunchDate = res.data.LaunchDate;
       }
     )
-    
+    debugger
     this.route.queryParams
     .subscribe(params => {
       if(params.r){

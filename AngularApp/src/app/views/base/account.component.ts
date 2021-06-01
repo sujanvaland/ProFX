@@ -33,6 +33,7 @@ MemberId = 0;
 Email = "";
 Inviter = "";
 User = "";
+otpSuccess = false;
 ngOnInit(): void {
   this.accountdetail =this.formBuilder.group({
     FirstName: ['', Validators.required],

@@ -15,11 +15,7 @@ export class CustomerService {
   }
 
 
-  GetBinaryPlacementSetting(CustomerId)
-  {
-    let url = environment.baseApiUrl + "Customer/GetBinaryPlacementSetting?CustomerId="+CustomerId;
-    return this.http.get<any>(url)
-  }
+
   UpdateBinaryPlacementSetting(CustomerId,Value)
   {
     let url = environment.baseApiUrl + "Customer/UpdateBinaryPlacementSetting?CustomerId="+CustomerId+"&Value="+Value;

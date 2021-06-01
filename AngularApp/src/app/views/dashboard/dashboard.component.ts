@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   radioModel: string = 'Month';
   CustomerId :string = localStorage.getItem("CustomerId");
   SiteUrl : string = environment.siteUrl;
-  CustomerInfoModel = { BitcoinAddress:'',Enable2FA:false,TotalReferral:0,SystemName:'',Status : '', FullName :'',AvailableBalance :0,TradeIncome:0,NetworkIncome:0,RoyaltyIncome:0,TodaysPair:'',AvailableCoin:0,TotalEarning:0,DirectBonus:0,
+  CustomerInfoModel = { Email:'',BitcoinAddress:'',Enable2FA:false,TotalReferral:0,SystemName:'',Status : '', FullName :'',AvailableBalance :0,TradeIncome:0,NetworkIncome:0,RoyaltyIncome:0,TodaysPair:'',AvailableCoin:0,TotalEarning:0,DirectBonus:0,
   AvailableCoins:0,UnilevelEarning : 0,CyclerIncome:0,CustomerId:0,RegistrationDate:'',ServerTime :'',ReferredBy:'',AffilateId:0,
   NoOfSecondsToSurf:0,NoOfAdsToSurf:0,PlacementId:0,Position:'',Username:'',PlacementUserName:'',AccumulatedPairing:'',PackageName:''}
   CustomerBoard = [];
@@ -46,6 +46,7 @@ export class DashboardComponent implements OnInit {
   ContractMessage = "";
   TwoFAMessage = "";
   BinaryMessge = "";
+ 
   treebalance:any = {};
   @ViewChild('infoModal') public infoModal: ModalDirective;
   @ViewChild('congratsModal') public congratsModal: ModalDirective;

@@ -47,13 +47,13 @@ ngOnInit (){
       }else{
         inviter = localStorage.getItem("inviter");
       }
-      debugger
+      
       this.loginserviceService.GetInviterDetail(inviter).subscribe(
         res =>{
           if(res.Message == "success"){
             this.inviterName = res.data.name;
             this.position = res.data.placement;
-            this.customerservice.GetBinaryPlacementSetting(res.data.id).subscribe(result=>{
+            this.loginserviceService.GetBinaryPlacementSetting(res.data.id).subscribe(result=>{
               this.placementid = result.Data;
               this.register.get('PlacementUserName').setValue(this.placementid);
               this.register.get('SponsorsName').setValue(inviter);

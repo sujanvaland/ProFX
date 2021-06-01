@@ -14,7 +14,11 @@ export class LoginserviceService {
     return this.http.post<any>(url,
       loginuserdata)
   }
-
+  GetBinaryPlacementSetting(CustomerId)
+  {
+    let url = environment.baseApiUrl + "Login/GetBinaryPlacementSetting?CustomerId="+CustomerId;
+    return this.http.get<any>(url)
+  }
   ValidateLoginWith2FA(loginuserdata)
   {
     let url = environment.baseApiUrl + "Login/ValidateLoginWith2FA";

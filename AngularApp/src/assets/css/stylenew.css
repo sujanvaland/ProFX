@@ -1545,3 +1545,22 @@ input[type=checkbox]:checked + label {
 
 .contact-widget ul li img{width:20px;}
 .contact-widget ul li:nth-child(2) img{height:20px; width: auto;}
+
+@media screen and (max-width:767px){
+  .dashboardcount ul{
+    display:flex; flex-direction: row; flex-wrap: wrap; justify-content: center;
+    align-items: center;
+  }
+  .dashboardcount ul li{
+    width:100%; max-width:300px; margin:0px;
+  }
+  .binarybox a{
+    margin-bottom: 10px;
+  }
+  .app-header .navbar-brand{
+    left:125px!important;
+  }
+  .sidebar-show .main::before, .aside-menu-show .main::before{
+    display:none!important;
+  }
+}

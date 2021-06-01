@@ -965,6 +965,25 @@ namespace SmartStore.WebApi.Controllers.Api
 				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Some thing went wrong" });
 			}
 		}
-		
+
+
+		[System.Web.Http.HttpGet]
+		[System.Web.Http.ActionName("GetBinaryPlacementSetting")]
+		public HttpResponseMessage GetBinaryPlacementSetting(int CustomerId)
+		{
+			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
+			if (customerguid != null)
+			{
+				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
+				if (CustomerId != cust.Id)
+				{
+					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
+				}
+				var placement = _customerService.SpGetBinarySetting(CustomerId);
+				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Success", Data = placement });
+			}
+
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
+		}
 	}
 }

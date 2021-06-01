@@ -229,7 +229,7 @@ namespace SmartStore.WebApi.Controllers.Api
 			model.TradeIncome = _customerService.GetTradeIncome(customer.Id);
 			model.PendingWithdrawal = _customerService.GetCustomerPendingWithdrawal(customer.Id);
 			model.CompletedWithdrawal = _customerService.GetCustomerCompletedWithdrawal(customer.Id);
-			model.ReferralLink = _storeContext.CurrentStore.Url + "?r=" + customer.Id;
+			model.ReferralLink = _storeContext.CurrentStore.Url + "?/#/r=" + customer.Id;
 			var id = customer.Id;
 			model.CompletedWithdrawal = _customerService.GetCustomerCompletedWithdrawal(id);
 			model.PendingWithdrawal = _customerService.GetCustomerPendingWithdrawal(id);
@@ -593,24 +593,6 @@ namespace SmartStore.WebApi.Controllers.Api
 			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
 		}
 
-		[System.Web.Http.HttpGet]
-		[System.Web.Http.ActionName("GetBinaryPlacementSetting")]
-		public HttpResponseMessage GetBinaryPlacementSetting(int CustomerId)
-		{
-			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
-			if (customerguid != null)
-			{
-				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
-				if (CustomerId != cust.Id)
-				{
-					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
-				}
-				var placement =_customerService.SpGetBinarySetting(CustomerId);
-				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Success",Data= placement });
-			}
-
-			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
-		}
 
 	}
 

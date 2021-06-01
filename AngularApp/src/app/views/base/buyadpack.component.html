@@ -5,7 +5,7 @@
         <div class="card-header">
           <strong>Buy Trade Lots</strong>          
         </div>
-        <div class="card-body">
+        <div class="card-body" [hidden]="!showform">
             <div class="packagelist" > <!-- *ngIf="confirm" -->
               <div class="row" *ngFor="let plan of Plans">
                 <div class="col-md-2">
@@ -15,11 +15,56 @@
                   <h4>{{plan.Name}} ({{plan.MinimumInvestment}}$) , Daily Binary Cap : {{plan.MinimumInvestment}}$ , Gains : 300%</h4>
                 </div>
                 <div class="col-md-2">
-                  <a (click)="onSubmit(plan.Id)" class="btn btn-outline-primary active">Select Package</a>
+                  <a (click)="onSubmit(plan)" class="btn btn-outline-primary active">Select Package</a>
                 </div>
               </div>
             </div>
         </div>
+        <div class="card-body" [hidden]="showform">
+          <div>
+            <form action="https://www.coinpayments.net/index.php" target="_blank" method="POST" #form>
+              <input type='hidden' name='cmd' value='_pay_simple'>
+              <input type='hidden' name='reset' value='1'>
+              <input type='hidden' name='merchant' [(ngModel)]="MerchantAcc">
+              <input type='hidden' name='currency' [(ngModel)]="CurrencyCode">
+              <input type='hidden' name='amountf'[(ngModel)]="FinalAmount">
+              <input type='hidden' name='item_name' [(ngModel)]="PaymentMemo">
+              <input type='hidden' name='custom' [(ngModel)]="TransactionId">
+              <!-- <input type='hidden' name='ipn_url' [(ngModel)]="ipn_url"> -->
+            </form>
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <label>Amount :</label>
+                <label>{{CurrencyCode}} {{FinalAmount}}</label>
+              </div>
+            </div>
+            <button type="submit" (click)="form.submit()" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Proceed to Pay</button>
+            <button type="cancel" (click)="onReset()" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Cancel</button>
+          </div>
+        </div>
+        <div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-info" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Confirm Purchase</h4>
+                <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="card-body">
+                  <div>
+                    <span>Are you sure you want to make this purchase ?</span>
+                   </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="infoModal.hide()">Close</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div>
+        
       </div>
     </div><!--/.col-->
    </div>
