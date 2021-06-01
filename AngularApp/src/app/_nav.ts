@@ -11,11 +11,11 @@ export const navItems: INavData[] = [
   //   name: 'Theme'
   // },
 
-  {
-    name: 'Add Funds',
-    url: '/base/addfund',
-    icon: 'cui-dollar'
-  },
+  // {
+  //   name: 'Add Funds',
+  //   url: '/base/addfund',
+  //   icon: 'cui-dollar'
+  // },
   // {
   //   name: 'Activate Phase',
   //   url: '/base/buymatrixposition',

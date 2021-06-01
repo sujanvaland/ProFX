@@ -79,9 +79,9 @@ constructor(
       }
       
       let transactionModel ={
-        Amount : plan.MinimumInvestment,
+        Amount : (this.plan?.Id > 0) ? plan.MinimumInvestment - this.plan.MinimumInvestment : plan.MinimumInvestment,
         CustomerId : this.CustomerId,
-        FinalAmount : plan.MinimumInvestment,
+        FinalAmount :  (this.plan?.Id > 0) ? plan.MinimumInvestment - this.plan.MinimumInvestment : plan.MinimumInvestment,
         NoOfPosition : 1,
         RefId : plan.Id,
         ProcessorId : 0,
