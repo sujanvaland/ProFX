@@ -118,28 +118,32 @@
                                                     <li>
                             <a href="#">
                                 <span class="verified">
-                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    <i class="fa fa-times" aria-hidden="true" [hidden]="WalletMessage != 'Wallet Address has not been configured.'"></i>
+                                    <i class="fa fa-check" aria-hidden="true" [hidden]="WalletMessage == 'Wallet Address has not been configured.'"></i>
                                 </span>
                                 {{WalletMessage}}                    </a>
                             </li>
                            <li class="active-contract">
                                 <a href="#">
                                     <span class="verified">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        <i class="fa fa-times" aria-hidden="true" [hidden]="TwoFAMessage != '2FA is not enabled.'"></i>
+                                        <i class="fa fa-check" aria-hidden="true" [hidden]="TwoFAMessage == '2FA is not enabled.'"></i>
                                     </span>
                                     {{TwoFAMessage}}                                  </a>
                             </li>
                             <li class="active-contract">
                                 <a href="#">
                                     <span class="verified">
-                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                        <i class="fa fa-times" aria-hidden="true" [hidden]="ContractMessage != 'Your Contract is Not Active.'"></i>
+                                        <i class="fa fa-check" aria-hidden="true" [hidden]="ContractMessage == 'Your Contract is Not Active.'"></i>
                                     </span>
                                     {{ContractMessage}}                                  </a>
                             </li>
                             <li class="active-on-binary">
                                 <a href="#">
                                     <span class="verified">
-                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                        <i class="fa fa-times" aria-hidden="true" [hidden]="BinaryMessge != 'You are not Qualified on Binary.'"></i>
+                                        <i class="fa fa-check" aria-hidden="true" [hidden]="BinaryMessge == 'You are not Qualified on Binary.'"></i>
                                     </span>
                                     {{BinaryMessge}}                             </a>
                             </li>

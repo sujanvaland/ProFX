@@ -113,11 +113,11 @@ export const navItems: INavData[] = [
   //   url: '/base/marketing',
   //   icon: 'cui-globe'
   // },
-  {
-    name: 'Deposit History',
-    url: '/base/deposithistory',
-    icon: 'cui-pie-chart'
-  },
+  // {
+  //   name: 'Deposit History',
+  //   url: '/base/deposithistory',
+  //   icon: 'cui-pie-chart'
+  // },
   {
     name: 'Withdrawal History',
     url: '/base/withdrawalhistory',

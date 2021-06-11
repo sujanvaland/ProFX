@@ -14,10 +14,10 @@ namespace SmartStore.WebApi.Models.Api.Customer
 
 		public string Position { get; set; }
 
-		public int PlacementId { get; set; }
+		public int? PlacementId { get; set; }
 
 		public string Email { get; set; }
-
+		public string Manual { get; set; }
         public bool UsernamesEnabled { get; set; }
         public string Username { get; set; }
 		public int AffliateId { get; set; }

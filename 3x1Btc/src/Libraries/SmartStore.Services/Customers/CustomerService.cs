@@ -1005,7 +1005,7 @@ namespace SmartStore.Services.Customers
 			var totalPurchase = GetCustomerPurchase(customerid);
 			var totalTransfer = GetCustomerTransfer(customerid);
 
-			var availablebalance = totalFunding + totalTotalEarning + totalTradeFunding - (totalPurchase + totalWithdrawal + totalTransfer);
+			var availablebalance = totalFunding + totalTotalEarning + totalTradeFunding - (totalWithdrawal + totalTransfer);
 			return availablebalance;
 		}
 
@@ -1224,7 +1224,7 @@ namespace SmartStore.Services.Customers
 		{
 			var paidreferral = from c in _customerRepository.Table
 							   join inner in _transactionRepository.Table on c.Id equals inner.CustomerId
-							   where inner.StatusId == 2 && inner.TranscationTypeId == 2
+							   where inner.StatusId == 2 && inner.TranscationTypeId == 2 && c.AffiliateId == customerid
 							   select c;
 			return paidreferral.ToList();
 		}
@@ -1288,14 +1288,14 @@ namespace SmartStore.Services.Customers
 			return id.FirstOrDefault();
 		}
 
-		public string SpGetBinarySetting(int CustomerId)
+		public PlacementSetting SpGetBinarySetting(int CustomerId)
 		{
 			SqlParameter pCustomerId = new SqlParameter();
 			pCustomerId.ParameterName = "CustomerId";
 			pCustomerId.Value = CustomerId;
 			pCustomerId.DbType = DbType.Int32;
 
-			var placement = _dbContext.SqlQuery<string>("Exec SpGetBinarySetting @CustomerId", pCustomerId).ToList();
+			var placement = _dbContext.SqlQuery<PlacementSetting>("Exec SpGetBinarySetting @CustomerId", pCustomerId).ToList();
 			return placement.FirstOrDefault();
 		}
 
@@ -1396,7 +1396,7 @@ namespace SmartStore.Services.Customers
 
 		public float GetTradeIncome(int CustomerId)
 		{
-			var TradeIncomeList = _customerPlanRepository.Table.Where(e => e.CustomerId == CustomerId).Select(e => e.ROIPaid).ToList();
+			var TradeIncomeList = _customerPlanRepository.Table.Where(e => e.CustomerId == CustomerId && e.IsActive == true).Select(e => e.ROIPaid).ToList();
 
 			if (TradeIncomeList != null)
 			{
@@ -1410,7 +1410,11 @@ namespace SmartStore.Services.Customers
 		public int AvailableImpression { get; set; }
 		public int AvailableClick { get; set; }
 	}
-
+	public partial class PlacementSetting
+	{
+		public string Placement { get; set; }
+		public string Position { get; set; }
+	}
 	public partial class ProSignal
 	{
 		public int Id { get; set; }

@@ -45,6 +45,7 @@ get f() { return this.login.controls; }
           res => {
             if(res.Message == "success"){
               if(!res.data.Enable2FA){
+                localStorage.setItem("Username",this.login.value.Email)
                 localStorage.setItem("token",res.token)
                 localStorage.setItem("CustomerGuid",res.data.CustomerGuid)
                 localStorage.setItem("CustomerId",res.data.Id)

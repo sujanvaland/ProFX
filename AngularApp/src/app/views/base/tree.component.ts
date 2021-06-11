@@ -24,6 +24,7 @@ export class TreeComponent {
   TreeViewHTML:string="";
   Level = 1;
   prevId = localStorage.getItem("CustomerId");
+  Username = localStorage.getItem("Username");
   ngOnInit() {
     
     this.route.queryParams
@@ -89,13 +90,13 @@ export class TreeComponent {
          this.TreeViewHTML +=  '<ul>';
           // use the fetch_assoc to get an associative array
           if(parentRow.HasLeft == 0){
-            this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+parentRow.Name+'&p=L">+ Add Left</a>';
+            this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+this.Username+'&placement='+parentRow.Name+'&p=L">+ Add Left</a>';
           }
           newchildList.forEach(childnode =>{
             this.display_with_children(childnode,level+1);            
           }) 
           if(parentRow.HasRight == 0){
-            this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+parentRow.Name+'&p=R">+ Add Right</a>';
+            this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+this.Username+'&placement='+parentRow.Name+'&p=R">+ Add Right</a>';
           }
           this.TreeViewHTML += '</ul>';
       }
@@ -103,10 +104,10 @@ export class TreeComponent {
       if(newchildList.length == 0){
         this.TreeViewHTML +=  '<ul>';
         if(parentRow.HasLeft == 0){
-          this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+parentRow.Name+'&p=L">+ Add Left</a>';
+          this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+this.Username+'&placement='+parentRow.Name+'&p=L">+ Add Left</a>';
         }
         if(parentRow.HasRight == 0){
-          this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+parentRow.Name+'&p=R">+ Add Right</a>';
+          this.TreeViewHTML +=  '<li><span class="tf-nc"><img width="20" src="assets/img/user-male-icon.png"/><br><a target="_blank" href="#/register?r='+this.Username+'&placement='+parentRow.Name+'&p=R">+ Add Right</a>';
         }
         this.TreeViewHTML += '</ul>';
       }

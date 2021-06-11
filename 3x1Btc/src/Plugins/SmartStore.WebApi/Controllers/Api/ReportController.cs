@@ -180,6 +180,7 @@ namespace SmartStore.WebApi.Controllers.Api
 					TransactionDate = x.TransactionDate,
 					IsVisible = Is_Visible,
 					StatusId = x.StatusId,
+					TranscationNote = x.TranscationNote,
 					TransStatusString = x.Status.GetLocalizedEnum(_localizationService, _workContext),
 					TranscationTypeString = x.TranscationType.GetLocalizedEnum(_localizationService, _workContext),
 					ProcessorId = x.ProcessorId,

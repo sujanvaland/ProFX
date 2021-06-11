@@ -236,7 +236,7 @@ namespace SmartStore.WebApi.Controllers.Api
 			model.CyclerIncome = (float)Math.Round(_customerService.GetCustomerCyclerBonus(id), 2);
 			model.DirectBonus = _customerService.GetCustomerDirectBonus(id);
 			model.UnilevelEarning = _customerService.GetCustomerUnilevelBonus(id);
-			model.TotalReferral = _customerService.GetCustomerDirectReferral(id).Count();
+			model.TotalReferral = _customerService.GetCustomerPaidDirectReferral(id).Count();
 			model.AdCredit = _customerService.GetAvailableCredits(CustomerId).FirstOrDefault().AvailableClick;
 			model.TodaysPair = _customerService.GetCurrentActivePlan(customer.Id).ToString();
 			model.InvestorId = id.ToString();

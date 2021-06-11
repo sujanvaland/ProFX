@@ -215,6 +215,7 @@ namespace SmartStore.WebApi.Controllers.Api
 		[System.Web.Http.ActionName("BuyShare")]
 		public HttpResponseMessage BuyShare(CustomerPlanModel customerPlanModel)
 		{
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Purchase is disabled till launch date" });
 			string message = "";
 			try
 			{
@@ -263,12 +264,11 @@ namespace SmartStore.WebApi.Controllers.Api
 						transactionModel.TransactionDate = DateTime.Now;
 						transactionModel.RefId = plan.Id;
 						transactionModel.ProcessorId = customerPlanModel.ProcessorId;
-						transactionModel.TranscationTypeId = (int)TransactionType.Purchase;
+						transactionModel.TranscationTypeId = (int)TransactionType.Funding;
 						var transcation = transactionModel.ToEntity();
-
 						transcation.NoOfPosition = customerPlanModel.NoOfPosition;
-						transcation.TranscationTypeId = (int)TransactionType.Purchase;
-						transcation.StatusId = (int)Status.Completed;
+						transcation.TranscationTypeId = (int)TransactionType.Funding;
+						transcation.StatusId = (int)Status.Pending;
 						_transactionService.InsertTransaction(transcation);
 						
 						for (int i = 0; i < customerPlanModel.NoOfPosition; i++)
@@ -493,6 +493,8 @@ namespace SmartStore.WebApi.Controllers.Api
 				var Customer = _customerService.GetCustomerById(CustomerId);
 				var gridModel = new GridModel<MyInvestmentPlan>();
 				var customerplan = Customer.CustomerPlan.Where(x => x.IsActive == true).ToList();
+				var otherEarning = _customerService.GetCustomerTotalEarnings(CustomerId);
+
 				gridModel.Data = customerplan.Select(x =>
 				{
 					var myInvestment = new MyInvestmentPlan();
@@ -500,10 +502,11 @@ namespace SmartStore.WebApi.Controllers.Api
 					myInvestment.PlanId = x.PlanId;
 					myInvestment.PlanName = _planService.GetPlanById(x.PlanId).Name;
 					myInvestment.PurchaseDate = x.PurchaseDate;
-					myInvestment.ROIPaid = x.ROIPaid;
+					myInvestment.AmountInvested = x.AmountInvested;
+					myInvestment.ROIPaid = x.ROIPaid + otherEarning;
 					myInvestment.ROIToPay = x.ROIToPay;
-					myInvestment.ROIPending = (x.ROIToPay - x.ROIPaid);
-					myInvestment.ROIPaidString = x.ROIPaid.ToString() + " " + _workContext.WorkingCurrency.CurrencyCode;
+					myInvestment.ROIPending = (x.ROIToPay - myInvestment.ROIPaid);
+					myInvestment.ROIPaidString = myInvestment.ROIPaid.ToString() + " " + _workContext.WorkingCurrency.CurrencyCode;
 					myInvestment.ROIToPayString = x.ROIToPay.ToString() + " " + _workContext.WorkingCurrency.CurrencyCode;
 					myInvestment.ROIPendingString = myInvestment.ROIPending.ToString() + " " + _workContext.WorkingCurrency.CurrencyCode;
 					myInvestment.TotalFundingString = x.AmountInvested.ToString() + " " + _workContext.WorkingCurrency.CurrencyCode;

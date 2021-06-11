@@ -42,4 +42,12 @@ export class MatrixService {
     );
   }
 
+  AddPurchaseTransaction(transactionModel)
+  {
+    let url = environment.baseApiUrl + "Matrix/AddPurchaseTransaction";
+    return this.http.post<any>(url,
+      transactionModel
+    );
+  }
+  
 }

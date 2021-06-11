@@ -85,7 +85,7 @@ export class DashboardComponent implements OnInit {
             }else{
               this.ContractMessage= "Your Contract is Not Active."
             }
-            if(this.CustomerInfoModel.TotalReferral > 2){
+            if(this.CustomerInfoModel.TotalReferral >= 2){
               this.BinaryMessge= "You are Qualified on Binary."
             }else{
               this.BinaryMessge= "You are not Qualified on Binary."

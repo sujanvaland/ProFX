@@ -8,6 +8,7 @@
         <thead>
           <tr>
             <th>Purchase Id</th>
+            <th>Purchase Note</th>
             <th>Amount</th>
             <!-- <th>Processor Name</th> -->
             <th>Purchase Date</th>
@@ -17,6 +18,7 @@
         <tbody>
           <tr *ngFor="let purchase of PurchaseData">
             <td>{{purchase.Id}}</td>
+            <td>{{purchase.TranscationNote}}</td>
             <td>{{purchase.FinalAmountRaw}}</td>
             <!-- <td>{{purchase.TranscationTypeString}}</td> -->
             <td>{{purchase.TransactionDate |  date:'mediumDate'}}</td>

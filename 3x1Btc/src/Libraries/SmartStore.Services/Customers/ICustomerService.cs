@@ -334,7 +334,7 @@ namespace SmartStore.Services.Customers
 		float GetNetworkIncome(int CustomerId);
 		float GetTradeIncome(int CustomerId);
 		int GetCurrentActivePlan(int CustomerId);
-		string SpGetBinarySetting(int CustomerId);
+		PlacementSetting SpGetBinarySetting(int CustomerId);
 		List<ProSignal> SpGetProSignals();
 	}
 }

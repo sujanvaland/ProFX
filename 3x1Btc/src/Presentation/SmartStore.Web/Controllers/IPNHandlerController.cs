@@ -80,30 +80,45 @@ namespace SmartStore.Web.Controllers
 						transaction.Status = Status.Completed;
 						transaction.StatusId = (int)Status.Completed;
 						transaction.FinalAmount = transaction.Amount;
-						transaction.TranscationNote = Request["txn_id"].ToSafe();
-						
+						transaction.TranscationNote = transaction.TranscationNote + ":" + Request["txn_id"].ToSafe();
 						_transactionService.UpdateTransaction(transaction);
-						if(transaction.TranscationTypeId == 2)
+						if (transaction.TranscationTypeId == 2)
 						{
-							Transaction transactionf = new Transaction();
-							transactionf.Amount =transaction.Amount;
-							transactionf.CustomerId = transaction.CustomerId;
-							transactionf.FinalAmount = transaction.Amount;
-							transactionf.NoOfPosition = 0;
-							transactionf.TransactionDate = DateTime.Now;
-							transactionf.RefId = 0;
-							transactionf.ProcessorId = 0;
-							transactionf.StatusId = (int)Status.Completed;
-							transactionf.TranscationTypeId = (int)TransactionType.Purchase;
-							transaction.TranscationNote = Request["txn_id"].ToSafe();
-							_transactionService.InsertTransaction(transactionf);
-
-							ReleaseLevelCommission(transaction.RefId, transaction.Customer);
-							Services.MessageFactory.SendUnilevelPositionPurchasedNotificationMessageToUser(transaction.Customer, "", "", _localizationSettings.DefaultAdminLanguageId);
-						}
-						else
-						{
+							var exisitingPlan = _customerService.GetCurrentPlanList(transaction.CustomerId);
+							var plan = _planService.GetPlanById(transaction.RefId);
+							var customerplan = new CustomerPlan();
+							customerplan.CustomerId = transaction.CustomerId;
+							customerplan.PurchaseDate = DateTime.Now;
+							customerplan.CreatedOnUtc = DateTime.Now;
+							customerplan.UpdatedOnUtc = DateTime.Now;
+							customerplan.PlanId = transaction.RefId;
+							customerplan.AmountInvested = plan.MaximumInvestment;
+							if (exisitingPlan != null)
+							{
+								customerplan.ROIPaid = exisitingPlan.ROIPaid;
+								customerplan.NoOfPayoutPaid = exisitingPlan.NoOfPayoutPaid;
+							}
+							customerplan.ROIToPay = (plan.MaximumInvestment * 3);
+							customerplan.NoOfPayout = plan.NoOfPayouts;
+							customerplan.ExpiredDate = DateTime.Today;
+							customerplan.IsActive = true;
+							if (plan.StartROIAfterHours > 0)
+								customerplan.LastPaidDate = DateTime.Today.AddHours(plan.StartROIAfterHours);
+							else
+								customerplan.LastPaidDate = DateTime.Today;
+							_customerPlanService.InsertCustomerPlan(customerplan);
+							
+							_customerService.SpPayNetworkIncome(customerplan.CustomerId, customerplan.PlanId);
+							if (exisitingPlan != null)
+							{
+								exisitingPlan.IsActive = false;
+								exisitingPlan.IsExpired = true;
+								exisitingPlan.ROIPaid = 0;
+								exisitingPlan.NoOfPayoutPaid = 0;
+								_customerPlanService.UpdateCustomerPlan(exisitingPlan);
+							}
 							Services.MessageFactory.SendDepositNotificationMessageToUser(transaction, "", "", _localizationSettings.DefaultAdminLanguageId);
+
 						}
 					}
 				}
@@ -120,28 +135,44 @@ namespace SmartStore.Web.Controllers
 				transaction.Status = Status.Completed;
 				transaction.StatusId = (int)Status.Completed;
 				transaction.FinalAmount = transaction.Amount;
+				transaction.TranscationNote = transaction.TranscationNote + ":" + Request["txn_id"].ToSafe();
 				_transactionService.UpdateTransaction(transaction);
 				if (transaction.TranscationTypeId == 2)
 				{
-					Transaction transactionf = new Transaction();
-					transactionf.Amount = transaction.Amount;
-					transactionf.CustomerId = transaction.CustomerId;
-					transactionf.FinalAmount = transaction.Amount;
-					transactionf.NoOfPosition = 0;
-					transactionf.TransactionDate = DateTime.Now;
-					transactionf.RefId = 0;
-					transactionf.ProcessorId = 0;
-					transactionf.StatusId = (int)Status.Completed;
-					transactionf.TranscationTypeId = (int)TransactionType.Purchase;
-					transaction.TranscationNote = Request["txn_id"].ToSafe();
-					_transactionService.InsertTransaction(transactionf);
-
-					ReleaseLevelCommission(transaction.RefId, transaction.Customer);
-					Services.MessageFactory.SendUnilevelPositionPurchasedNotificationMessageToUser(transaction.Customer, "", "", _localizationSettings.DefaultAdminLanguageId);
-				}
-				else
-				{
+					var exisitingPlan = _customerService.GetCurrentPlanList(transaction.CustomerId);
+					var plan = _planService.GetPlanById(transaction.RefId);
+					var customerplan = new CustomerPlan();
+					customerplan.CustomerId = transaction.CustomerId;
+					customerplan.PurchaseDate = DateTime.Now;
+					customerplan.CreatedOnUtc = DateTime.Now;
+					customerplan.UpdatedOnUtc = DateTime.Now;
+					customerplan.PlanId = transaction.RefId;
+					customerplan.AmountInvested = plan.MaximumInvestment;
+					if (exisitingPlan != null)
+					{
+						customerplan.ROIPaid = exisitingPlan.ROIPaid;
+						customerplan.NoOfPayoutPaid = exisitingPlan.NoOfPayoutPaid;
+					}
+					customerplan.ROIToPay = (plan.MaximumInvestment * 3);
+					customerplan.NoOfPayout = plan.NoOfPayouts;
+					customerplan.ExpiredDate = DateTime.Today;
+					customerplan.IsActive = true;
+					if (plan.StartROIAfterHours > 0)
+						customerplan.LastPaidDate = DateTime.Today.AddHours(plan.StartROIAfterHours);
+					else
+						customerplan.LastPaidDate = DateTime.Today;
+					_customerPlanService.InsertCustomerPlan(customerplan);
+					_customerService.SpPayNetworkIncome(customerplan.CustomerId, customerplan.PlanId);
+					if (exisitingPlan != null)
+					{
+						exisitingPlan.IsActive = false;
+						exisitingPlan.IsExpired = true;
+						exisitingPlan.ROIPaid = 0;
+						exisitingPlan.NoOfPayoutPaid = 0;
+						_customerPlanService.UpdateCustomerPlan(exisitingPlan);
+					}
 					Services.MessageFactory.SendDepositNotificationMessageToUser(transaction, "", "", _localizationSettings.DefaultAdminLanguageId);
+
 				}
 			}
 		}

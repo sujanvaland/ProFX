@@ -59,8 +59,8 @@ get f() { return this.withdrawal.controls; }
             return;
         }
 
-        if(this.withdrawal.value.Amount < 10){
-          this.toastr.error("Withdrawal Amount Must be Grater Then 10$.");
+        if(this.withdrawal.value.Amount < 25){
+          this.toastr.error("Withdrawal Amount must be equal or greater then 25$.");
         }
         if(this.withdrawal.value.Amount > 500){
           this.toastr.error("Maximum Withdrawal Amount 500$.");
@@ -72,7 +72,7 @@ get f() { return this.withdrawal.controls; }
         .subscribe(
           res =>{
             if(res.Message === "success"){
-              this.toastr.success("Yieepiee your withdrawal request is accepted","Congratulations !!")
+              this.toastr.success("Your withdrawal request is received","Congratulations !!")
               this.router.navigate(['/dashboard']);
             }
             else{

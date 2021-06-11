@@ -183,7 +183,7 @@ namespace SmartStore.Web.Framework
 				// No record yet or account deleted/deactivated.
 				// Also dont' treat registered customers as guests.
 				// Create new record in these cases.
-				customer = _customerService.GetCustomerById(2);
+				customer = _customerService.GetCustomerById(3);
 				//customer = _customerService.InsertGuestCustomer();
 			}
 

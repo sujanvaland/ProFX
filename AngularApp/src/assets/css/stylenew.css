@@ -1545,7 +1545,17 @@ input[type=checkbox]:checked + label {
 
 .contact-widget ul li img{width:20px;}
 .contact-widget ul li:nth-child(2) img{height:20px; width: auto;}
-
+h3 {
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+p {
+  font-size: 1rem;
+  font-family: "Muli", sans-serif;
+  color: #fff;
+}
 @media screen and (max-width:767px){
   .dashboardcount ul{
     display:flex; flex-direction: row; flex-wrap: wrap; justify-content: center;

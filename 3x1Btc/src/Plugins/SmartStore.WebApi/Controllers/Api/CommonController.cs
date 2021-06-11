@@ -211,9 +211,9 @@ namespace SmartStore.WebApi.Controllers.Api
 				{
 					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Enter correct amount" });
 				}
-				if (model.Amount < 10)
+				if (model.Amount < 25)
 				{
-					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Withdrawal Amount Must be Grater Then 10$." });
+					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Withdrawal Amount must be equal or greater then 25$." });
 				}
 				if (model.Amount > 500)
 				{

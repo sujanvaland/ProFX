@@ -14,6 +14,7 @@ namespace SmartStore.Admin.Models.Investment
 		public float ROIToPay { get; set; }
 		public float ROIPaid { get; set; }
 		public float ROIPending { get; set; }
+		public float AmountInvested { get; set; }
 		public float RepurchaseWallet { get; set; }
 		public string TotalFundingString { get; set; }
 		public string ROIToPayString { get; set; }

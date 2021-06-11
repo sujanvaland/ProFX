@@ -35,6 +35,7 @@ ngOnInit (){
       Phone: ['', Validators.required],
       UserName: ['', [Validators.required,Validators.pattern("^[a-zA-Z0-9\s]*$")]],
       Position:'',
+      Manual:'0'
     });
     
     $('.loaderbo').show();
@@ -47,21 +48,39 @@ ngOnInit (){
       }else{
         inviter = localStorage.getItem("inviter");
       }
-      
+      debugger
       this.loginserviceService.GetInviterDetail(inviter).subscribe(
         res =>{
           if(res.Message == "success"){
             this.inviterName = res.data.name;
-            this.position = res.data.placement;
-            this.loginserviceService.GetBinaryPlacementSetting(res.data.id).subscribe(result=>{
-              this.placementid = result.Data;
+            if(params.placement){
+              if(params.placement){
+                this.placementid = params.placement;
+              }
+              if(params.p){
+                this.position = params.p;
+              }
               this.register.get('PlacementUserName').setValue(this.placementid);
               this.register.get('SponsorsName').setValue(inviter);
               this.register.get('Position').setValue(this.position);
-            },err => {  
-              $('.loaderbo').hide();
-            })
-
+            }else{
+              if(res.data.placement =='L' || res.data.placement == 'R'){
+                this.position = res.data.placement;
+              }
+              
+              this.loginserviceService.GetBinaryPlacementSetting(res.data.id).subscribe(result=>{
+                this.placementid = result.Data.Placement;
+                this.register.get('PlacementUserName').setValue(this.placementid);
+                this.register.get('SponsorsName').setValue(inviter);
+                this.position = result.Data.Position;
+                if(result.Data.Position =='L' || result.Data.Position == 'R'){
+                  this.register.get('Position').setValue(result.Data.Position);
+                }
+                
+              },err => {  
+                $('.loaderbo').hide();
+              })
+            }
             $('.loaderbo').hide();
           }
           else{
@@ -104,6 +123,14 @@ get f() { return this.register.controls; }
           return;
         }
         $('.loaderbo').show();
+        this.route.queryParams
+        .subscribe(params => {
+          debugger
+            if(params.placement){
+            this.register.value.Manual = "1";
+            }
+          }
+        );
         this.loginserviceService.Register(this.register.value).subscribe(
           res => {
             if(res.Message == "success"){

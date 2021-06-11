@@ -121,63 +121,8 @@ namespace SmartStore.Web.Controllers
 
 			////task.Name = string.Concat("Check Blockchain Transaction Status", " Task");
 			////_scheduleTaskService.InsertTask(task);
-			if (Request["r"] != null)
-			{
-				System.Web.HttpCookie cookie = new System.Web.HttpCookie("3x1btcreferral", Request["r"].ToSafe());
-				HttpContext.Response.Cookies.Remove("3x1btcreferral");
-				HttpContext.Response.SetCookie(cookie);
-			}
-			var reff = Request.Cookies["3x1btcreferral"];
-			var customer = _services.WorkContext.CurrentCustomer;
-			var isAdmin = customer.IsAdmin();
-			var isRegistered = isAdmin || customer.IsRegistered();
-			HomeModel homemodel = new HomeModel();
-			homemodel.LaunchDate = DateTime.Parse("04/15/2020").ToShortDateString(); //DateTime.Today.AddDays(-95).ToShortDateString();
-			TimeSpan dt = DateTime.Now - DateTime.Parse(homemodel.LaunchDate);
-			if(dt.Days > 0)
-			{
-				homemodel.RunningDays = dt.Days.ToString();
-			}
-			else
-			{
-				homemodel.RunningDays = "0";
-			}
-			var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.Value.OnlineCustomerMinutes),
-				null, 0, _adminAreaSettings.GridPageSize);
-
-			homemodel.OnlineVistors = customers.TotalCount.ToString();
-			int[] StatusIds = { (int)Status.Completed };
-			int[] TranscationTypeIds = { (int)TransactionType.Purchase };
-			var totalfundinglist = _transcationService.GetAllTransactions(0, 0, null, null, StatusIds, TranscationTypeIds, 0, int.MaxValue).OrderByDescending(x => x.TransactionDate).Take(10);
-			homemodel.TotalSiteDeposit = _transcationService.GetAllTransactions(0, 0, null, null, StatusIds, TranscationTypeIds, 0, int.MaxValue).Select(x => x.Amount).Sum().ToString();
-			int[] WithTranscationTypeIds = { (int)TransactionType.Withdrawal };
-			var totalWithdrawallist = _transcationService.GetAllTransactions(0, 0, null, null, StatusIds, WithTranscationTypeIds, 0, int.MaxValue).OrderByDescending(x => x.TransactionDate).Take(10);
-			homemodel.TotalSiteWithdrawal = _transcationService.GetAllTransactions(0, 0, null, null, StatusIds, WithTranscationTypeIds, 0, int.MaxValue).Select(x => x.Amount).Sum().ToString();
-
-			var withdrawals = totalWithdrawallist.OrderByDescending(x => x.TransactionDate).ToList();
-			foreach (var d in withdrawals)
-			{
-				WithdrawalList w = new WithdrawalList();
-				w.Email = "GM-" + d.Customer.Id;
-				w.AmountRaw = d.Amount.ToString() + _workContext.WorkingCurrency.CurrencyCode;
-				w.TransDate = d.TransactionDate.ToShortDateString();
-				w.PaymentMethodIcon = d.ProcessorId + ".svg";
-				homemodel.Last10Withdrawal.Add(w);
-			}
-
-			var deposits = totalfundinglist.OrderByDescending(x => x.TransactionDate).ToList();
-			foreach (var d in deposits)
-			{
-				DepositList w = new DepositList();
-				w.Email = "GM-" + d.Customer.Id;
-				w.AmountRaw = d.Amount.ToString() + _workContext.WorkingCurrency.CurrencyCode;
-				w.TransDate = d.TransactionDate.ToShortDateString();
-				w.PaymentMethodIcon = d.ProcessorId + ".svg";
-				homemodel.Last10Deposit.Add(w);
-			}
-			homemodel.plans = _planService.GetAllPackage().ToList();
-			ViewBag.SiteName = "3x1 BTC";
-			return View(homemodel);
+			
+			return View();
 		}
 
 		public ActionResult GetAuthCode()

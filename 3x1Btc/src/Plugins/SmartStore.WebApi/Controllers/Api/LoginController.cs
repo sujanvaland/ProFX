@@ -426,8 +426,18 @@ namespace SmartStore.WebApi.Controllers.Api
 		[System.Web.Http.ActionName("Register")]
 		public HttpResponseMessage Register(RegisterModel model)
 		{
+			
 			var ValidateTree = _customerService.ValidateTree(model.PlacementUserName);
 			var Sponsors = _customerService.GetCustomerByUsername(model.SponsorsName);
+			var placementsetting = _customerService.SpGetBinarySetting(Sponsors.Id);
+			if (model.Manual != "1")
+			{
+				if (placementsetting != null)
+				{
+					model.PlacementUserName = placementsetting.Placement;
+					model.Position = placementsetting.Position;
+				}
+			}
 			var PlaceamentUser = _customerService.GetCustomerByUsername(model.PlacementUserName);
 			if (model.Position == "" || model.Position == null)
 			{
@@ -441,10 +451,12 @@ namespace SmartStore.WebApi.Controllers.Api
 			{
 				return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = "Placement Id Incorrect" });
 			}
-
-			if (ValidateTree.Contains(model.Position))
+			if (model.Manual == "1")
 			{
-				return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = "This Position Is Already Filled" });
+				if (ValidateTree.Contains(model.Position))
+				{
+					return Request.CreateResponse(HttpStatusCode.OK, new { code = 1, Message = "This Position Is Already Filled" });
+				}
 			}
 			if (_customerService.ValidateEmail(model.Email))
 			{
@@ -468,7 +480,7 @@ namespace SmartStore.WebApi.Controllers.Api
 					return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Registration is disabled" });
 				}
 
-				var customer = _customerService.InsertGuestCustomerNew(model.PlacementId, model.Position);
+				var customer = _customerService.InsertGuestCustomerNew(PlaceamentUser.Id, model.Position);
 				if (customer.Id != 0)
 				{
 					_workContext.CurrentCustomer = customer;
@@ -479,7 +491,7 @@ namespace SmartStore.WebApi.Controllers.Api
 					model.Username = model.Username.Trim();
 				}
 				customer.AffiliateId = model.AffliateId;
-				customer.PlacementId = model.PlacementId;
+				customer.PlacementId = PlaceamentUser.Id;
 				customer.PlacementUserName = model.PlacementUserName;
 				customer.SponsorsName = model.SponsorsName;
 				customer.Position = model.Position;
@@ -971,19 +983,10 @@ namespace SmartStore.WebApi.Controllers.Api
 		[System.Web.Http.ActionName("GetBinaryPlacementSetting")]
 		public HttpResponseMessage GetBinaryPlacementSetting(int CustomerId)
 		{
-			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
-			if (customerguid != null)
-			{
-				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
-				if (CustomerId != cust.Id)
-				{
-					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
-				}
+			
 				var placement = _customerService.SpGetBinarySetting(CustomerId);
 				return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Success", Data = placement });
-			}
-
-			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "Binary setting updated" });
+			
 		}
 	}
 }

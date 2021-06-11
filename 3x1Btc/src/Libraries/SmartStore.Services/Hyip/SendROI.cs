@@ -41,7 +41,7 @@ namespace SmartStore.Services.Hyip
 			string weekday = DateTime.Today.DayOfWeek.ToString();
 			//WritetoLog("Executing roi");
 			var customerplans = _customerPlanService.GetAllCustomerPlans().ToList();
-			//WritetoLog("totalpurchase"+customerplans.Count().ToString());
+			customerplans = customerplans.Where(x => x.IsActive == true).ToList();
 			foreach (var cp in customerplans)
 			{
 				if (cp.Customer.Active && cp.IsActive && !cp.IsExpired)
@@ -93,7 +93,8 @@ namespace SmartStore.Services.Hyip
 						cp.ROIPaid = cp.ROIPaid + HourlyROIToPay;
 						//cp.RepurchaseWallet = cp.RepurchaseWallet + repurchaseAmount;
 						cp.NoOfPayoutPaid = cp.NoOfPayoutPaid + 1;
-						if (cp.ROIPaid >= cp.ROIToPay)
+						var otherEarning = _customerService.GetCustomerTotalEarnings(cp.CustomerId);
+						if (cp.ROIPaid + otherEarning >= cp.ROIToPay)
 						{
 							cp.ExpiredDate = DateTime.Now;
 							cp.IsExpired = true;

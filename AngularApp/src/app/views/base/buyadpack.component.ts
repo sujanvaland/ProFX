@@ -60,6 +60,7 @@ constructor(
         
 
       this.customerservice.GetPlanDetail(this.CustomerId).subscribe(result =>{
+        console.log(result.data)
         this.plan = result.data;
       })
       
@@ -71,33 +72,42 @@ constructor(
 
     }
     
-    onSubmit(plan) {
+    onSubmit(newplan) {
+
       this.submitted = true;
       if(!environment.AllowFund){
         this.toastr.info("Purchase is diabled till launch date");
         return;
       }
-      
-      let transactionModel ={
-        Amount : (this.plan?.Id > 0) ? plan.MinimumInvestment - this.plan.MinimumInvestment : plan.MinimumInvestment,
-        CustomerId : this.CustomerId,
-        FinalAmount :  (this.plan?.Id > 0) ? plan.MinimumInvestment - this.plan.MinimumInvestment : plan.MinimumInvestment,
-        NoOfPosition : 1,
-        RefId : plan.Id,
-        ProcessorId : 0,
-        TranscationTypeId : 1
+      debugger
+      if(this.plan?.PlanId >= newplan.Id){
+        this.toastr.info("Choose higher package to upgrade");
+        return;
       }
-      this.matrixservice.AddTransaction(transactionModel).subscribe(
+      let transactionModel ={
+        Amount : (this.plan?.PlanId > 0) ? newplan.MinimumInvestment - this.plan.AmountInvested : newplan.MinimumInvestment,
+        CustomerId : this.CustomerId,
+        FinalAmount :  (this.plan?.PlanId > 0) ? newplan.MinimumInvestment - this.plan.AmountInvested : newplan.MinimumInvestment,
+        NoOfPosition : 1,
+        RefId : newplan.Id,
+        ProcessorId : 0,
+        TranscationNote : "Package "+ newplan.Id + "Purchase",
+        TranscationTypeId : 2
+      }
+      $('.loaderbo').show();
+      this.matrixservice.AddPurchaseTransaction(transactionModel).subscribe(
         res => {
           if(res.Message){
               this.TransactionId = res.data.Id;
-              this.FinalAmount = plan.MinimumInvestment;
+              this.FinalAmount = transactionModel.Amount;
               this.MerchantAcc = environment.coinPaymentMerAcc;
               this.showform = false;
               //this.infoModal.show();
+              $('.loaderbo').hide();
           }
         },
         err => {
+          $('.loaderbo').hide();
           if(err.status == 401){
             localStorage.clear();
             this.router.navigate(['/login']);

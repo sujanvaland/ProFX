@@ -362,5 +362,27 @@ namespace SmartStore.WebApi.Controllers.Api
 			_transactionService.InsertTransaction(transcation);
 			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = new { Id = transcation.Id } });
 		}
+
+		[System.Web.Http.HttpPost]
+		[System.Web.Http.ActionName("AddPurchaseTransaction")]
+		public HttpResponseMessage AddPurchaseTransaction(TransactionModel transactionModel)
+		{
+			var customerguid = Request.Headers.GetValues("CustomerGUID").FirstOrDefault();
+			if (customerguid != null)
+			{
+				var cust = _customerService.GetCustomerByGuid(Guid.Parse(customerguid));
+				if (transactionModel.CustomerId != cust.Id)
+				{
+					return Request.CreateResponse(HttpStatusCode.Unauthorized, new { code = 0, Message = "something went wrong" });
+				}
+			}
+			transactionModel.TransactionDate = DateTime.Now;
+			var transcation = transactionModel.ToEntity();
+			transcation.NoOfPosition = transactionModel.NoOfPosition;
+			transcation.StatusId = (int)Status.Pending;
+			transcation.TranscationTypeId = 2;
+			_transactionService.InsertTransaction(transcation);
+			return Request.CreateResponse(HttpStatusCode.OK, new { code = 0, Message = "success", data = new { Id = transcation.Id } });
+		}
 	}
 }

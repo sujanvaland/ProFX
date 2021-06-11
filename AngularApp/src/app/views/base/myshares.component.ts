@@ -22,8 +22,9 @@ export class MySharesComponent {
     ngOnInit (){
       this.revshare.MyShare(this.CustomerId).subscribe(
         res =>{
+          console.log(res);
           if(res.Message == "success"){
-            this.CustomerBeginnerPlan = res.data.Data.filter(x=>x.PlanName == "Beginner Pack");
+            this.CustomerBeginnerPlan = res.data.Data;
             // this.CustomerProfessionalPlan = res.data.Data.filter(x=>x.PlanName == "Professional Pack");
             // this.CustomerEnterprisePlan = res.data.Data.filter(x=>x.PlanName == "Enterprise Pack");
           }
